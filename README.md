@@ -85,8 +85,12 @@ If your system language is for example french, it will load from `ux0:VitaShell/
 Languages files are available in the `l10n` folder of this repository.
 
 ## Building
-Install [vitasdk](https://github.com/vitasdk) and build VitaShell using:
+Install [VitaSDK](https://github.com/vitasdk), then install the necessary packages:
+```
+vdpm install expat libarchive libftpvita libvita2d libvorbis taihen quirc onigmo
+```
 
+Now you can build using the following command:
 ```
 mkdir build && cd build && cmake .. && make
 ```

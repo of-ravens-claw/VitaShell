@@ -6,7 +6,7 @@ VitaShellKernel2:
   main:
     start: module_start
     stop: module_stop
-  modules:
+  libraries:
     VitaShellKernel2Library:
       syscall: true
       functions:

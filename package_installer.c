@@ -34,17 +34,17 @@ static int loadScePaf() {
 
   int result = -1;
 
-  uint32_t buf[4];
-  buf[0] = sizeof(buf);
-  buf[1] = (uint32_t)&result;
-  buf[2] = -1;
-  buf[3] = -1;
+  SceSysmoduleOpt buf;
+  buf.flags = 0x10;
+  buf.result = &result;
+  buf.unused[0] = -1;
+  buf.unused[1] = -1;
 
-  return sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, buf);
+  return sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, &buf);
 }
 
 static int unloadScePaf() {
-  uint32_t buf = 0;
+  SceSysmoduleOpt buf;
   return sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &buf);
 }
 

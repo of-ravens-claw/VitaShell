@@ -134,10 +134,10 @@ void drawShellInfo(const char *path) {
   SceDateTime time;
   sceRtcGetCurrentClock(&time, 0);
 
-  char date_string[16];
+  char date_string[24];
   getDateString(date_string, date_format, &time);
 
-  char time_string[24];
+  char time_string[16];
   getTimeString(time_string, time_format, &time);
 
   char string[64];

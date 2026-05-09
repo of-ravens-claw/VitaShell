@@ -1003,10 +1003,10 @@ int browserMain() {
           }
 
           // Date
-          char date_string[16];
+          char date_string[24];
           getDateString(date_string, date_format, &file_entry->mtime);
 
-          char time_string[24];
+          char time_string[16];
           getTimeString(time_string, time_format, &file_entry->mtime);
 
           char string[64];

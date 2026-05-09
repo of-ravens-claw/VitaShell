@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
 # VitaSDK defines
 if( NOT DEFINED CMAKE_TOOLCHAIN_FILE )
@@ -17,8 +17,8 @@ set(VITA_TITLEID  "VITASHELL")
 set(VITA_VERSION  "02.03")
 
 # Flags and includes
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -Wno-unused-variable -Wno-unused-but-set-variable -Wno-format-truncation -fno-lto")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c+ + 11 -fno-rtti -fno-exceptions")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -Wno-unused-variable -Wno-unused-but-set-variable -Wno-format-truncation -fno-lto -std=gnu99")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -fno-exceptions")
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2808000000000000")
 
@@ -148,10 +148,10 @@ add_executable(VitaShell
 )
 
 add_dependencies(VitaShell vitashell_user_stubs)
-add_dependencies(VitaShell kernel.skprx)
-add_dependencies(VitaShell user.suprx)
-add_dependencies(VitaShell patch.skprx)
-add_dependencies(VitaShell usbdevice.skprx)
+add_dependencies(VitaShell kernel.skprx-self)
+add_dependencies(VitaShell user.suprx-self)
+add_dependencies(VitaShell patch.skprx-self)
+add_dependencies(VitaShell usbdevice.skprx-self)
 
 target_link_libraries(VitaShell
   ${CMAKE_CURRENT_BINARY_DIR}/modules/user/libVitaShellUser_stub_weak.a
@@ -168,9 +168,8 @@ target_link_libraries(VitaShell
   quirc
   onigmo
   archive
+  zstd
   bz2
-  lzma
-  crypto
   expat
   taihen_stub
   SceAppMgr_stub

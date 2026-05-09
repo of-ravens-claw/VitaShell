@@ -299,8 +299,8 @@ int initPropertyDialog(char *path, FileListEntry *entry) {
   }
 
   // Dates
-  char date_string[16];
-  char time_string[24];
+  char date_string[24];
+  char time_string[16];
   char string[64];
 
   // Modification date

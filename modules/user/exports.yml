@@ -6,7 +6,7 @@ VitaShellUser:
   main:
     start: module_start
     stop: module_stop
-  modules:
+  libraries:
     VitaShellUserLibrary:
       syscall: false
       functions:
