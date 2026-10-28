@@ -55,11 +55,8 @@ ENDFUNCTION()
 
 file(GLOB res_files RELATIVE
   ${CMAKE_SOURCE_DIR}
-  resources/umass.skprx
   resources/default/*.png
   resources/default/*.txt
-  resources/electron/*.png
-  resources/electron/*.txt
   resources/*.png
   resources/*.txt
   resources/*.bin
@@ -85,7 +82,6 @@ add_executable(VitaShell
   archive.c
   psarc.c
   photo.c
-  audioplayer.c
   file.c
   text.c
   hex.c
@@ -108,13 +104,6 @@ add_executable(VitaShell
   minizip/ioapi.c
   bm.c
   strnatcmp.c
-  audio/vita_audio.c
-  audio/player.c
-  audio/id3.c
-  audio/oggplayer.c
-  audio/mp3player.c
-  audio/mp3xing.c
-  audio/lrcparse.c
   libmad/bit.c
   libmad/decoder.c
   libmad/fixed.c
@@ -130,24 +119,17 @@ add_executable(VitaShell
 target_link_libraries(VitaShell
   ftpvita
   vita2d
-  vorbisfile
-  vorbis
-  ogg
   png
   jpeg
   z
   m
   c
-  onigmo
   archive
   zstd
   bz2
   expat
-  taihen_stub
   SceAppMgr_stub
   SceAppUtil_stub
-  SceAudio_stub
-  SceAudiodec_stub
   SceCamera_stub
   SceCommonDialog_stub
   SceCtrl_stub
@@ -187,25 +169,4 @@ vita_create_vpk(VitaShell.vpk ${VITA_TITLEID} eboot.bin
        pkg/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
        pkg/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
        pkg/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-)
-
-# for network update
-add_custom_target(release
-  COMMAND cp eboot.bin ../release/eboot.bin
-  COMMAND cp VitaShell.vpk_param.sfo ../release/param.sfo
-  COMMAND cp VitaShell.vpk ../release/VitaShell.vpk
-  COMMAND cp ../pkg/sce_sys/livearea/contents/template.xml ../release/template.xml
-  DEPENDS eboot.bin
-  DEPENDS VitaShell.vpk
-  DEPENDS VitaShell.vpk_param.sfo
-)
-
-add_custom_target(send
-  COMMAND curl -T eboot.bin ftp://$(PSVITAIP):1337/ux0:/app/${VITA_TITLEID}/
-  DEPENDS eboot.bin
-)
-
-add_custom_target(copy
-  COMMAND cp eboot.bin G:/app/${VITA_TITLEID}/eboot.bin
-  DEPENDS eboot.bin
 )

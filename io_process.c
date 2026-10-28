@@ -385,7 +385,6 @@ static int mediaPathHandler(const char *path) {
     case FILE_TYPE_BMP:
     case FILE_TYPE_JPEG:
     case FILE_TYPE_PNG:
-    case FILE_TYPE_MP3:
     case FILE_TYPE_MP4:
       return 0;
   }
@@ -448,22 +447,6 @@ static int exportMedia(char *path, uint32_t *songs, uint32_t *videos, uint32_t *
     }
 
     (*pictures)++;
-  } else if (type == FILE_TYPE_MP3) {
-    uint32_t value = 0;
-
-    uint32_t args[3];
-    args[0] = (uint32_t)stat.st_size;
-    args[1] = (uint32_t)&value;
-    args[2] = (uint32_t)process_param;
-
-    MusicExportParam param;
-    memset(&param, 0, sizeof(MusicExportParam));
-    res = sceMusicExportFromFile(path, &param, buf, process_param ? process_param->cancelHandler : NULL,
-                                 musicExportProgress, &args, out, MAX_PATH_LENGTH);
-    if (res < 0)
-      return (res == 0x8010530A) ? 0 : res;
-
-    (*songs)++;
   } else if (type == FILE_TYPE_MP4) {
     VideoExportInputParam in_param;
     memset(&in_param, 0, sizeof(VideoExportInputParam));

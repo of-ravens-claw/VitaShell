@@ -27,7 +27,6 @@
 #include "context_menu.h"
 #include "archive.h"
 #include "photo.h"
-#include "audioplayer.h"
 #include "file.h"
 #include "text.h"
 #include "hex.h"

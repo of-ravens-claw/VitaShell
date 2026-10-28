@@ -24,8 +24,6 @@
 #include "utils.h"
 #include "rif.h"
 
-#include "audio/vita_audio.h"
-
 char vitashell_titleid[12];
 
 int is_safe_mode = 0;
@@ -199,7 +197,6 @@ void initVitaShell() {
   sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
 
   // Init
-  vitaAudioInit(0x40);
   initVita2dLib();
   initSceAppUtil();
   initNet();
@@ -215,7 +212,6 @@ void finishVitaShell() {
   finishNet();
   finishSceAppUtil();
   finishVita2dLib();
-  vitaAudioShutdown();
   
   // Unload modules
   sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);

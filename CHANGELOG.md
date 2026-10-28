@@ -11,6 +11,7 @@
 - Do not write any files to the Memory Card.
 - Removed bookmarks.
 - Removed recent files.
+- Remove music player.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

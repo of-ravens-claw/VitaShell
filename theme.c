@@ -25,7 +25,6 @@
 
 INCLUDE_EXTERN_RESOURCE(default_colors_txt);
 INCLUDE_EXTERN_RESOURCE(default_archive_icon_png);
-INCLUDE_EXTERN_RESOURCE(default_audio_icon_png);
 INCLUDE_EXTERN_RESOURCE(default_battery_bar_charge_png);
 INCLUDE_EXTERN_RESOURCE(default_battery_bar_green_png);
 INCLUDE_EXTERN_RESOURCE(default_battery_bar_red_png);
@@ -110,10 +109,10 @@ int AUDIO_TIME_BAR;
 int AUDIO_TIME_BAR_BG;
 
 vita2d_texture *folder_icon = NULL, *folder_symlink_icon = NULL, *file_icon = NULL,*file_symlink_icon = NULL, *archive_icon =NULL, *image_icon = NULL,
-    *audio_icon = NULL, *sfo_icon = NULL, *text_icon = NULL,
+    *sfo_icon = NULL, *text_icon = NULL,
          *ftp_image = NULL, *dialog_image = NULL, *context_image = NULL, *context_more_image = NULL, *settings_image = NULL, *battery_image = NULL,
          *battery_bar_red_image = NULL, *battery_bar_green_image = NULL, *battery_bar_charge_image = NULL, *bg_browser_image = NULL, *bg_hex_image = NULL, *bg_text_image = NULL,
-         *bg_photo_image = NULL, *bg_audio_image = NULL, *cover_image = NULL, *play_image = NULL, *pause_image = NULL, *fastforward_image = NULL, *fastrewind_image = NULL;
+         *bg_photo_image = NULL, *play_image = NULL, *pause_image = NULL, *fastforward_image = NULL, *fastrewind_image = NULL;
 
 vita2d_texture *wallpaper_image;
 
@@ -130,19 +129,16 @@ typedef struct {
 
 ThemeImage theme_images[] = {
   { "archive_icon.png", &_binary_resources_default_archive_icon_png_start, &archive_icon },
-  { "audio_icon.png", &_binary_resources_default_audio_icon_png_start, &audio_icon },
   { "battery.png", &_binary_resources_default_battery_png_start, &battery_image },
   { "battery_bar_charge.png", &_binary_resources_default_battery_bar_charge_png_start, &battery_bar_charge_image },
   { "battery_bar_green.png", &_binary_resources_default_battery_bar_green_png_start, &battery_bar_green_image },
   { "battery_bar_red.png", &_binary_resources_default_battery_bar_red_png_start, &battery_bar_red_image },
-  { "bg_audioplayer.png", NULL, &bg_audio_image },
   { "bg_browser.png", NULL, &bg_browser_image },
   { "bg_hexeditor.png", NULL, &bg_hex_image },
   { "bg_photoviewer.png", NULL, &bg_photo_image },
   { "bg_texteditor.png", NULL, &bg_text_image },
   { "context.png", NULL, &context_image },
   { "context_more.png", NULL, &context_more_image },
-  { "cover.png", &_binary_resources_default_cover_png_start, &cover_image },
   { "dialog.png", NULL, &dialog_image },
   { "fastforward.png", &_binary_resources_default_fastforward_png_start, &fastforward_image },
   { "fastrewind.png", &_binary_resources_default_fastrewind_png_start, &fastrewind_image },

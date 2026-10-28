@@ -27,7 +27,6 @@
 #include "context_menu.h"
 #include "archive.h"
 #include "photo.h"
-#include "audioplayer.h"
 #include "file.h"
 #include "text.h"
 #include "hex.h"
@@ -342,8 +341,6 @@ static int handleFile(const char *file, FileListEntry *entry) {
 
   switch (type) {
     case FILE_TYPE_PSP2DMP:
-    case FILE_TYPE_MP3:
-    case FILE_TYPE_OGG:
     case FILE_TYPE_VPK:
     case FILE_TYPE_ARCHIVE:
       if (isInArchive())
@@ -370,11 +367,6 @@ static int handleFile(const char *file, FileListEntry *entry) {
       res = photoViewer(file, type, &file_list, entry, &base_pos, &rel_pos);
       break;
 
-    case FILE_TYPE_MP3:
-    case FILE_TYPE_OGG:
-      res = audioPlayer(file, type, &file_list, entry, &base_pos, &rel_pos);
-      break;
-      
     case FILE_TYPE_SFO:
       res = SFOReader(file);
       break;
@@ -767,12 +759,6 @@ int browserMain() {
             case FILE_TYPE_ARCHIVE:
               color = ARCHIVE_COLOR;
               icon = archive_icon;
-              break;
-              
-            case FILE_TYPE_MP3:
-            case FILE_TYPE_OGG:
-              color = IMAGE_COLOR;
-              icon = audio_icon;
               break;
               
             case FILE_TYPE_SFO:

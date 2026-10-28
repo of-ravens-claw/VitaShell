@@ -232,14 +232,6 @@ int initPropertyDialog(char *path, FileListEntry *entry) {
       type = PROPERTY_TYPE_JPEG;
       break;
       
-    case FILE_TYPE_MP3:
-      type = PROPERTY_TYPE_MP3;
-      break;
-      
-    case FILE_TYPE_OGG:
-      type = PROPERTY_TYPE_OGG;
-      break;
-      
     case FILE_TYPE_PNG:
       type = PROPERTY_TYPE_PNG;
       break;
