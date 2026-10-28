@@ -53,38 +53,6 @@ int known_pfs_ids[] = {
 };
 
 int pfsMount(const char *path) {
-  int res;
-  char work_path[MAX_PATH_LENGTH];
-  char klicensee[0x10];
-  char license_buf[0x200];
-  ShellMountIdArgs args;
-
-  memset(klicensee, 0, sizeof(klicensee));
-
-/*
-  snprintf(work_path, MAX_PATH_LENGTH, "%ssce_sys/package/work.bin", path);
-  if (ReadFile(work_path, license_buf, sizeof(license_buf)) == sizeof(license_buf)) {
-    int res = shellUserGetRifVitaKey(license_buf, klicensee);
-    debugPrintf("read license: 0x%08X\n", res);
-  }
-*/
-  args.process_titleid = VITASHELL_TITLEID;
-  args.path = path;
-  args.desired_mount_point = NULL;
-  args.klicensee = klicensee;
-  args.mount_point = pfs_mount_point;
-
-  read_only = 0;
-
-  int i;
-  for (i = 0; i < sizeof(known_pfs_ids) / sizeof(int); i++) {
-    args.id = known_pfs_ids[i];
-
-    res = shellUserMountById(&args);
-    if (res >= 0)
-      return res;
-  }
-
   read_only = 1;
   return sceAppMgrGameDataMount(path, 0, 0, pfs_mount_point);
 }

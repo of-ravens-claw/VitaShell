@@ -42,7 +42,6 @@
 #include "utils.h"
 #include "sfo.h"
 #include "coredump.h"
-#include "usb.h"
 #include "pfs.h"
 
 int _newlib_heap_size_user = 128 * 1024 * 1024;
@@ -51,8 +50,6 @@ static volatile int dialog_step = DIALOG_STEP_NONE;
 
 static char install_path[MAX_PATH_LENGTH];
 static char compress_name[MAX_NAME_LENGTH];
-
-static SceUID usbdevice_modid = -1;
 
 static SceKernelLwMutexWork dialog_mutex;
 
@@ -200,50 +197,6 @@ void initFtp() {
   }
 
   ftpvita_ext_add_custom_command("PROM", ftpvita_PROM);
-}
-
-void initUsb() {
-  char *path = NULL;
-
-  if (vitashell_config.usbdevice == USBDEVICE_MODE_MEMORY_CARD) {
-    if (checkFileExist("sdstor0:xmc-lp-ign-userext"))
-      path = "sdstor0:xmc-lp-ign-userext";
-    else if (checkFileExist("sdstor0:int-lp-ign-userext"))
-      path = "sdstor0:int-lp-ign-userext";
-    else
-      infoDialog(language_container[MEMORY_CARD_NOT_FOUND]);
-  } else if (vitashell_config.usbdevice == USBDEVICE_MODE_GAME_CARD) {
-    if (checkFileExist("sdstor0:gcd-lp-ign-gamero"))
-      path = "sdstor0:gcd-lp-ign-gamero";
-    else
-      infoDialog(language_container[GAME_CARD_NOT_FOUND]);
-  } else if (vitashell_config.usbdevice == USBDEVICE_MODE_SD2VITA) {
-    if (checkFileExist("sdstor0:gcd-lp-ign-entire"))
-      path = "sdstor0:gcd-lp-ign-entire";
-    else
-      infoDialog(language_container[MICROSD_NOT_FOUND]);
-  } else if (vitashell_config.usbdevice == USBDEVICE_MODE_PSVSD) {
-    if (checkFileExist("sdstor0:uma-pp-act-a"))
-      path = "sdstor0:uma-pp-act-a";
-    else if (checkFileExist("sdstor0:uma-lp-act-entire"))
-      path = "sdstor0:uma-lp-act-entire";
-    else
-      infoDialog(language_container[MICROSD_NOT_FOUND]);
-  }
-
-  if (!path)
-    return;
-
-  usbdevice_modid = startUsb("ux0:VitaShell/module/usbdevice.skprx", path, SCE_USBSTOR_VSTOR_TYPE_FAT);
-  if (usbdevice_modid >= 0) {
-    // Lock power timers
-    powerLock();
-    
-    initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[USB_CONNECTED]);
-    setDialogStep(DIALOG_STEP_USB);
-  } else {
-    errorDialog(usbdevice_modid);
-  }
 }
 
 int dialogSteps() {
@@ -451,51 +404,6 @@ int dialogSteps() {
       } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
         powerUnlock();
         ftpvita_fini();
-        refresh = REFRESH_MODE_NORMAL;
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_USB_WAIT:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        SceUdcdDeviceState state;
-        sceUdcdGetDeviceState(&state);
-        
-        if (state.cable & SCE_UDCD_STATUS_CABLE_CONNECTED) {
-          sceMsgDialogClose();
-        }
-      } else {
-        if (msg_result == MESSAGE_DIALOG_RESULT_NONE ||
-            msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-          setDialogStep(DIALOG_STEP_NONE);
-
-          SceUdcdDeviceState state;
-          sceUdcdGetDeviceState(&state);
-          
-          if (state.cable & SCE_UDCD_STATUS_CABLE_CONNECTED) {
-            initUsb();
-          }
-        }
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_USB:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        SceUdcdDeviceState state;
-        sceUdcdGetDeviceState(&state);
-        
-        if (state.cable & SCE_UDCD_STATUS_CABLE_DISCONNECTED) {
-          sceMsgDialogClose();
-        }
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        powerUnlock();
-        stopUsb(usbdevice_modid);
         refresh = REFRESH_MODE_NORMAL;
         setDialogStep(DIALOG_STEP_NONE);
       }

@@ -42,7 +42,6 @@
 #include "utils.h"
 #include "sfo.h"
 #include "coredump.h"
-#include "usb.h"
 #include "pfs.h"
 
 // File lists
@@ -485,44 +484,25 @@ static int fileBrowserMenuCtrl() {
 
   // SELECT button
   if (pressed_pad[PAD_SELECT]) {
-    if (vitashell_config.select_button == SELECT_BUTTON_MODE_USB &&
-        sceKernelGetModel() == SCE_KERNEL_MODEL_VITA) {
-      if (isSafeMode()) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
+    // Init FTP
+    if (!ftpvita_is_initialized()) {
+      int res = ftpvita_init(vita_ip, &vita_port);
+      if (res < 0) {
+        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[PLEASE_WAIT]);
+        setDialogStep(DIALOG_STEP_FTP_WAIT);
       } else {
-        SceUdcdDeviceState state;
-        sceUdcdGetDeviceState(&state);
-
-        if (state.cable & SCE_UDCD_STATUS_CABLE_CONNECTED) {
-          initUsb();
-        } else {
-          initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL,
-                            language_container[USB_NOT_CONNECTED]);
-          setDialogStep(DIALOG_STEP_USB_WAIT);
-        }
-      }
-    } else if (vitashell_config.select_button == SELECT_BUTTON_MODE_FTP ||
-               sceKernelGetModel() == SCE_KERNEL_MODEL_VITATV) {
-      // Init FTP
-      if (!ftpvita_is_initialized()) {
-        int res = ftpvita_init(vita_ip, &vita_port);
-        if (res < 0) {
-          initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[PLEASE_WAIT]);
-          setDialogStep(DIALOG_STEP_FTP_WAIT);
-        } else {
-          initFtp();
-        }
-
-        // Lock power timers
-        powerLock();
+        initFtp();
       }
 
-      // Dialog
-      if (ftpvita_is_initialized()) {
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL, language_container[FTP_SERVER],
-                          vita_ip, vita_port);
-        setDialogStep(DIALOG_STEP_FTP);
-      }
+      // Lock power timers
+      powerLock();
+    }
+
+    // Dialog
+    if (ftpvita_is_initialized()) {
+      initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL, language_container[FTP_SERVER],
+                        vita_ip, vita_port);
+      setDialogStep(DIALOG_STEP_FTP);
     }
   }
 

@@ -28,7 +28,6 @@
 #include "netcheck_dialog.h"
 #include "ime_dialog.h"
 #include "utils.h"
-#include "usb.h"
 #include "pfs.h"
 
 enum MenuHomeEntrys {
@@ -40,10 +39,6 @@ enum MenuHomeEntrys {
   MENU_HOME_ENTRY_UMOUNT_UMA0,
   MENU_HOME_ENTRY_UMOUNT_IMC0,
   MENU_HOME_ENTRY_UMOUNT_XMC0,
-  MENU_HOME_ENTRY_MOUNT_USB_UX0,
-  MENU_HOME_ENTRY_UMOUNT_USB_UX0,
-  MENU_HOME_ENTRY_MOUNT_GAMECARD_UX0,
-  MENU_HOME_ENTRY_UMOUNT_GAMECARD_UX0,
 };
 
 MenuEntry menu_home_entries[] = {
@@ -55,10 +50,6 @@ MenuEntry menu_home_entries[] = {
   { UMOUNT_UMA0,          7, 0, CTX_INVISIBLE },
   { UMOUNT_IMC0,          8, 0, CTX_INVISIBLE },
   { UMOUNT_XMC0,          9, 0, CTX_INVISIBLE },
-  { MOUNT_USB_UX0,       11, 0, CTX_INVISIBLE },
-  { UMOUNT_USB_UX0,      12, 0, CTX_INVISIBLE },
-  { MOUNT_GAMECARD_UX0,  14, 0, CTX_INVISIBLE },
-  { UMOUNT_GAMECARD_UX0, 15, 0, CTX_INVISIBLE },
 };
 
 #define N_MENU_HOME_ENTRIES (sizeof(menu_home_entries) / sizeof(MenuEntry))
@@ -317,31 +308,8 @@ void setContextMenuHomeVisibilities() {
       menu_home_entries[i].visibility = CTX_VISIBLE;
   }
 
-  if (checkFolderExist("uma0:")) {
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_UMA0].visibility = CTX_INVISIBLE;
-  } else {
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_USB_UX0].visibility = CTX_INVISIBLE;
-  }
-
-  if ((kernel_modid >= 0 || kernel_modid == 0x8002D013) && user_modid >= 0 &&
-      shellUserIsUx0Redirected("sdstor0:uma-pp-act-a", "sdstor0:uma-lp-act-entire") == 1) {
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_UMA0].visibility = CTX_INVISIBLE;
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_USB_UX0].visibility = CTX_INVISIBLE;
-  } else {
-    menu_home_entries[MENU_HOME_ENTRY_UMOUNT_USB_UX0].visibility = CTX_INVISIBLE;
-  }
-
-  if (!checkFileExist("sdstor0:gcd-lp-ign-entire")) {
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_GAMECARD_UX0].visibility = CTX_INVISIBLE;
-    menu_home_entries[MENU_HOME_ENTRY_UMOUNT_GAMECARD_UX0].visibility = CTX_INVISIBLE;
-  } else {
-    if ((kernel_modid >= 0 || kernel_modid == 0x8002D013) && user_modid >= 0 &&
-        shellUserIsUx0Redirected("sdstor0:gcd-lp-ign-entire", "sdstor0:gcd-lp-ign-entire") == 1) {
-      menu_home_entries[MENU_HOME_ENTRY_MOUNT_GAMECARD_UX0].visibility = CTX_INVISIBLE;
-    } else {
-      menu_home_entries[MENU_HOME_ENTRY_UMOUNT_GAMECARD_UX0].visibility = CTX_INVISIBLE;
-    }
-  }
+  if (checkFolderExist("uma0:"))
+    menu_home_entries[MENU_HOME_ENTRY_MOUNT_UMA0].visibility = CTX_INVISIBLE;  
 
   // Invisible if already mounted or there is no internal storage
   if (!checkFileExist("sdstor0:int-lp-ign-userext") || checkFolderExist("imc0:"))
@@ -787,42 +755,6 @@ static int contextMenuHomeEnterCallback(int sel, void *context) {
         refreshFileList();
       }
 
-      break;
-    }
-    
-    case MENU_HOME_ENTRY_MOUNT_USB_UX0:
-    {
-      if (mountUsbUx0() >= 0) {
-        infoDialog(language_container[USB_UX0_MOUNTED]);
-        refreshFileList();
-      }
-      break;
-    }
-
-    case MENU_HOME_ENTRY_UMOUNT_USB_UX0:
-    {
-      if (umountUsbUx0() >= 0) {
-        infoDialog(language_container[USB_UX0_UMOUNTED]);
-        refreshFileList();
-      }
-      break;
-    }
-    
-    case MENU_HOME_ENTRY_MOUNT_GAMECARD_UX0:
-    {
-      if (mountGamecardUx0() >= 0) {
-        infoDialog(language_container[GAMECARD_UX0_MOUNTED]);
-        refreshFileList();
-      }
-      break;
-    }
-
-    case MENU_HOME_ENTRY_UMOUNT_GAMECARD_UX0:
-    {
-      if (umountGamecardUx0() >= 0) {
-        infoDialog(language_container[GAMECARD_UX0_UMOUNTED]);
-        refreshFileList();
-      }
       break;
     }
   }

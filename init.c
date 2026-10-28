@@ -145,24 +145,11 @@ static DefaultFile default_files[] = {
   DEFAULT_FILE("ux0:VitaShell/theme/Electron/sfo_icon.png", electron_sfo_icon_png, 1),
   DEFAULT_FILE("ux0:VitaShell/theme/Electron/text_icon.png", electron_text_icon_png, 1),
   DEFAULT_FILE("ux0:VitaShell/theme/Electron/settings.png", electron_settings_png, 1),
-
-  DEFAULT_FILE("ux0:VitaShell/module/umass.skprx", umass_skprx, 1),
-  
-  { "ux0:VitaShell/module/kernel.skprx",    (void *)&_binary_modules_kernel_kernel_skprx_start,
-                                               (int)&_binary_modules_kernel_kernel_skprx_size, 1 },
-  { "ux0:VitaShell/module/user.suprx",      (void *)&_binary_modules_user_user_suprx_start,
-                                               (int)&_binary_modules_user_user_suprx_size, 1 },
-  { "ux0:VitaShell/module/patch.skprx",     (void *)&_binary_modules_patch_patch_skprx_start,
-                                               (int)&_binary_modules_patch_patch_skprx_size, 1 },
-  { "ux0:VitaShell/module/usbdevice.skprx", (void *)&_binary_modules_usbdevice_usbdevice_skprx_start,
-                                               (int)&_binary_modules_usbdevice_usbdevice_skprx_size, 1 },
 };
 
 char vitashell_titleid[12];
 
 int is_safe_mode = 0;
-
-SceUID patch_modid = -1, kernel_modid = -1, user_modid = -1;
 
 // System params
 int language = 0, enter_button = 0, date_format = 0, time_format = 0;
@@ -378,29 +365,6 @@ void initVitaShell() {
 
   // Install default files
   installDefaultFiles();
-
-  // Load modules
-  int search_unk[2];
-  SceUID search_modid;
-  search_modid = _vshKernelSearchModuleByName("VitaShellPatch", search_unk);
-  if(search_modid < 0) {
-    patch_modid = taiLoadKernelModule("ux0:VitaShell/module/patch.skprx", 0, NULL);
-    if (patch_modid >= 0) {
-      int res = taiStartKernelModule(patch_modid, 0, NULL, 0, NULL, NULL);
-      if (res < 0)
-        taiStopUnloadKernelModule(patch_modid, 0, NULL, 0, NULL, NULL);
-    }
-  }
-  search_modid = _vshKernelSearchModuleByName("VitaShellKernel2", search_unk);
-  if(search_modid < 0) {
-    kernel_modid = taiLoadKernelModule("ux0:VitaShell/module/kernel.skprx", 0, NULL);
-    if (kernel_modid >= 0) {
-      int res = taiStartKernelModule(kernel_modid, 0, NULL, 0, NULL, NULL);
-      if (res < 0)
-        taiStopUnloadKernelModule(kernel_modid, 0, NULL, 0, NULL, NULL);
-    }
-  }
-  user_modid = sceKernelLoadStartModule("ux0:VitaShell/module/user.suprx", 0, NULL, 0, NULL, NULL);
 
   // clear up recent folder frequently
   SceIoStat stat;

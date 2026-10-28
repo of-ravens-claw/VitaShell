@@ -27,8 +27,6 @@ extern char vitashell_titleid[12];
 
 extern int is_safe_mode;
 
-extern SceUID kernel_modid, user_modid;
-
 extern int language, enter_button, date_format, time_format;
 
 typedef struct {

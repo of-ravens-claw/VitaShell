@@ -42,10 +42,6 @@
 #include <vita2d.h>
 #include <ftpvita.h>
 
-#include <taihen.h>
-
-#include <vitashell_user.h>
-
 #include "file.h"
 #include "vitashell_config.h"
 #include "vitashell_error.h"
@@ -172,9 +168,6 @@ enum DialogSteps {
   DIALOG_STEP_FTP_WAIT,
   DIALOG_STEP_FTP,
 
-  DIALOG_STEP_USB_WAIT,
-  DIALOG_STEP_USB,
-
   DIALOG_STEP_RENAME,
 
   DIALOG_STEP_NEW_FILE,
@@ -244,7 +237,6 @@ void setDialogStep(int step);
 int dialogSteps();
 
 void initFtp();
-void initUsb();
 
 void drawScrollBar(int pos, int n);
 void drawShellInfo(const char *path);

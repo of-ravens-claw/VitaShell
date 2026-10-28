@@ -3,6 +3,7 @@
 ### Changelog 2.04 (stripped)
 - Remove QR scanner.
 - Remove network updater.
+- Remove taiHEN modules.
 
 ### Changelog 2.03
 - Added support for FW 3.74.
@@ -45,7 +46,7 @@
 - Fixed compatibility with `udcd_uvc.skprx ` thanks to xerpi.
 
 ### Changelog 1.94
-- Added ability to umount all partitions that you can mount.
+- Added ability to unmount all partitions that you can mount.
 - Fixed crash when using StorageMgr.
 
 ### Changelog 1.93
@@ -106,7 +107,7 @@
 - Fixed C2-12828-1 error.
 
 ### Changelog 1.75
-- Fixed bug where Memory Card was umounted after closing USB (fixed `The file is corrupt` error).
+- Fixed bug where Memory Card was unmounted after closing USB (fixed `The file is corrupt` error).
 - Fixed QR download of URLs that link to files.
 
 ### Changelog 1.74

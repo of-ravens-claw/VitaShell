@@ -22,16 +22,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -fno-exceptions")
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2808000000000000")
 
-add_subdirectory(modules/kernel)
-add_subdirectory(modules/user)
-add_subdirectory(modules/patch)
-add_subdirectory(modules/usbdevice)
-
-include_directories(
-  modules/kernel
-  modules/user
-)
-
 link_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -78,10 +68,6 @@ file(GLOB res_files RELATIVE
 # ugly hack
 add_resources(vitashell_res
   ${res_files}
-  ${CMAKE_CURRENT_BINARY_DIR}/modules/kernel/kernel.skprx
-  ${CMAKE_CURRENT_BINARY_DIR}/modules/user/user.suprx
-  ${CMAKE_CURRENT_BINARY_DIR}/modules/patch/patch.skprx
-  ${CMAKE_CURRENT_BINARY_DIR}/modules/usbdevice/usbdevice.skprx
 )
 
 add_executable(VitaShell
@@ -91,7 +77,6 @@ add_executable(VitaShell
   main_context.c
   browser.c
   init.c
-  usb.c
   io_process.c
   makezip.c
   package_installer.c
@@ -144,14 +129,7 @@ add_executable(VitaShell
   libmad/timer.c
 )
 
-add_dependencies(VitaShell vitashell_user_stubs)
-add_dependencies(VitaShell kernel.skprx-self)
-add_dependencies(VitaShell user.suprx-self)
-add_dependencies(VitaShell patch.skprx-self)
-add_dependencies(VitaShell usbdevice.skprx-self)
-
 target_link_libraries(VitaShell
-  ${CMAKE_CURRENT_BINARY_DIR}/modules/user/libVitaShellUser_stub_weak.a
   ftpvita
   vita2d
   vorbisfile
