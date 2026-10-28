@@ -29,26 +29,6 @@
 #include "utils.h"
 #include "pfs.h"
 
-enum MenuHomeEntrys {
-  MENU_HOME_ENTRY_MOUNT_UMA0,
-  MENU_HOME_ENTRY_MOUNT_IMC0,
-  MENU_HOME_ENTRY_MOUNT_XMC0,
-  MENU_HOME_ENTRY_UMOUNT_UMA0,
-  MENU_HOME_ENTRY_UMOUNT_IMC0,
-  MENU_HOME_ENTRY_UMOUNT_XMC0,
-};
-
-MenuEntry menu_home_entries[] = {
-  { MOUNT_UMA0,           3, 0, CTX_INVISIBLE },
-  { MOUNT_IMC0,           4, 0, CTX_INVISIBLE },
-  { MOUNT_XMC0,           5, 0, CTX_INVISIBLE },
-  { UMOUNT_UMA0,          7, 0, CTX_INVISIBLE },
-  { UMOUNT_IMC0,          8, 0, CTX_INVISIBLE },
-  { UMOUNT_XMC0,          9, 0, CTX_INVISIBLE },
-};
-
-#define N_MENU_HOME_ENTRIES (sizeof(menu_home_entries) / sizeof(MenuEntry))
-
 enum MenuMainEntrys {
   MENU_MAIN_ENTRY_OPEN_DECRYPTED,
   MENU_MAIN_ENTRY_MARK_UNMARK_ALL,
@@ -121,20 +101,10 @@ MenuEntry menu_new_entries[] = {
 
 #define N_MENU_NEW_ENTRIES (sizeof(menu_new_entries) / sizeof(MenuEntry))
 
-static int contextMenuHomeEnterCallback(int sel, void *context);
 static int contextMenuMainEnterCallback(int sel, void *context);
 static int contextMenuSortEnterCallback(int sel, void *context);
 static int contextMenuMoreEnterCallback(int sel, void *context);
 static int contextMenuNewEnterCallback(int sel, void *context);
-
-ContextMenu context_menu_home = {
-  .parent = NULL,
-  .entries = menu_home_entries,
-  .n_entries = N_MENU_HOME_ENTRIES,
-  .max_width = 0.0f,
-  .callback = contextMenuHomeEnterCallback,
-  .sel = -1,
-};
 
 ContextMenu context_menu_main = {
   .parent = NULL,
@@ -175,14 +145,6 @@ ContextMenu context_menu_new = {
 void initContextMenuWidth() {
   int i;
 
-  // Home
-  for (i = 0; i < N_MENU_HOME_ENTRIES; i++) {
-    context_menu_home.max_width = MAX(context_menu_home.max_width, pgf_text_width(language_container[menu_home_entries[i].name]));
-  }
-
-  context_menu_home.max_width += 2.0f * CONTEXT_MENU_MARGIN;
-  context_menu_home.max_width = MAX(context_menu_home.max_width, CONTEXT_MENU_MIN_WIDTH);
-
   // Main
   for (i = 0; i < N_MENU_MAIN_ENTRIES; i++) {
     context_menu_main.max_width = MAX(context_menu_main.max_width,
@@ -220,50 +182,6 @@ void initContextMenuWidth() {
   }
   context_menu_new.max_width += 2.0f * CONTEXT_MENU_MARGIN;
   context_menu_new.max_width = MAX(context_menu_new.max_width, CONTEXT_MENU_MIN_WIDTH);
-}
-
-void setContextMenuHomeVisibilities() {
-  int i;
-
-  // All visible
-  for (i = 0; i < N_MENU_HOME_ENTRIES; i++) {
-    if (menu_home_entries[i].visibility == CTX_INVISIBLE)
-      menu_home_entries[i].visibility = CTX_VISIBLE;
-  }
-
-  if (checkFolderExist("uma0:"))
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_UMA0].visibility = CTX_INVISIBLE;  
-
-  // Invisible if already mounted or there is no internal storage
-  if (!checkFileExist("sdstor0:int-lp-ign-userext") || checkFolderExist("imc0:"))
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_IMC0].visibility = CTX_INVISIBLE;
-
-  // Invisible if already mounted or there is no Memory Card
-  if (!checkFileExist("sdstor0:xmc-lp-ign-userext") || checkFolderExist("xmc0:"))
-    menu_home_entries[MENU_HOME_ENTRY_MOUNT_XMC0].visibility = CTX_INVISIBLE;
-
-  // Invisible if not mounted
-  if (!checkFolderExist("uma0:"))
-    menu_home_entries[MENU_HOME_ENTRY_UMOUNT_UMA0].visibility = CTX_INVISIBLE;
-
-  // Invisible if not mounted
-  if (!checkFolderExist("imc0:"))
-    menu_home_entries[MENU_HOME_ENTRY_UMOUNT_IMC0].visibility = CTX_INVISIBLE;
-
-  // Invisible if not mounted
-  if (!checkFolderExist("xmc0:"))
-    menu_home_entries[MENU_HOME_ENTRY_UMOUNT_XMC0].visibility = CTX_INVISIBLE;
-
-  // Go to first entry
-  for (i = 0; i < N_MENU_HOME_ENTRIES; i++) {
-    if (menu_home_entries[i].visibility == CTX_VISIBLE) {
-      context_menu_home.sel = i;
-      break;
-    }
-  }
-
-  if (i == N_MENU_HOME_ENTRIES)
-    context_menu_home.sel = -1;
 }
 
 void setContextMenuMainVisibilities() {
@@ -469,107 +387,6 @@ void setContextMenuNewVisibilities() {
 
   if (i == N_MENU_NEW_ENTRIES)
     context_menu_new.sel = -1;
-}
-
-static int contextMenuHomeEnterCallback(int sel, void *context) {
-  switch (sel) {
-    case MENU_HOME_ENTRY_MOUNT_UMA0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        if (checkFileExist("sdstor0:uma-lp-act-entire")) {
-          int res = vshIoMount(0xF00, NULL, 0, 0, 0, 0);
-          if (res < 0)
-            errorDialog(res);
-          else
-            infoDialog(language_container[UMA0_MOUNTED]);
-          refreshFileList();
-        } else {
-          initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[USB_WAIT_ATTACH]);
-          setDialogStep(DIALOG_STEP_USB_ATTACH_WAIT);
-        }
-      }
-
-      break;
-    }
-
-    case MENU_HOME_ENTRY_MOUNT_IMC0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        int res = vshIoMount(0xD00, NULL, 2, 0, 0, 0);
-        if (res < 0)
-          errorDialog(res);
-        else
-          infoDialog(language_container[IMC0_MOUNTED]);
-        refreshFileList();
-      }
-
-      break;
-    }
-
-    case MENU_HOME_ENTRY_MOUNT_XMC0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        int res = vshIoMount(0xE00, NULL, 2, 0, 0, 0);
-        if (res < 0)
-          errorDialog(res);
-        else
-          infoDialog(language_container[XMC0_MOUNTED]);
-        refreshFileList();
-      }
-
-      break;
-    }
-    
-    case MENU_HOME_ENTRY_UMOUNT_UMA0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        vshIoUmount(0xF00, 0, 0, 0);
-        vshIoUmount(0xF00, 1, 0, 0);
-        infoDialog(language_container[UMA0_UMOUNTED]);
-        refreshFileList();
-      }
-
-      break;
-    }
-
-    case MENU_HOME_ENTRY_UMOUNT_IMC0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        vshIoUmount(0xD00, 0, 0, 0);
-        vshIoUmount(0xD00, 1, 0, 0);
-        infoDialog(language_container[IMC0_UMOUNTED]);
-        refreshFileList();
-      }
-
-      break;
-    }
-    
-    case MENU_HOME_ENTRY_UMOUNT_XMC0:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        vshIoUmount(0xE00, 0, 0, 0);
-        vshIoUmount(0xE00, 1, 0, 0);
-        infoDialog(language_container[XMC0_UMOUNTED]);
-        refreshFileList();
-      }
-
-      break;
-    }
-  }
-
-  return CONTEXT_MENU_CLOSING;
 }
 
 static int contextMenuMainEnterCallback(int sel, void *context) {

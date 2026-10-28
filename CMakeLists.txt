@@ -114,7 +114,6 @@ target_link_libraries(VitaShell
   archive
   zstd
   bz2
-  expat
   SceAppMgr_stub
   SceAppUtil_stub
   SceCommonDialog_stub
@@ -133,7 +132,6 @@ target_link_libraries(VitaShell
   ScePgf_stub
   ScePower_stub
   ScePromoterUtil_stub
-  SceVshBridge_stub
 )
 
 # Create Vita artifacts

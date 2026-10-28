@@ -488,10 +488,6 @@ static int fileBrowserMenuCtrl() {
         setContextMenu(&context_menu_main);
         setContextMenuMainVisibilities();
         setContextMenuMode(CONTEXT_MENU_OPENING);
-      } else {
-        setContextMenu(&context_menu_home);
-        setContextMenuHomeVisibilities();
-        setContextMenuMode(CONTEXT_MENU_OPENING);
       }
     }
   }

@@ -31,9 +31,6 @@ static void rebootDevice();
 static void shutdownDevice();
 static void suspendDevice();
 
-static int changed = 0;
-static int theme = 0;
-
 static char spoofed_version[6];
 
 static SettingsMenuEntry *settings_menu_entries = NULL;
@@ -93,19 +90,6 @@ void openSettingsMenu() {
   settings_menu.status = SETTINGS_MENU_OPENING;
   settings_menu.entry_sel = 0;
   settings_menu.option_sel = 0;
-
-  // Get theme index in main tab
-  int theme_index = -1;
-
-  int i;
-  for (i = 0; i < (sizeof(main_settings) / sizeof(SettingsMenuOption)); i++) {
-    if (main_settings[i].name == VITASHELL_SETTINGS_THEME) {
-      theme_index = i;
-      break;
-    }
-  }
-
-  changed = 0;
 }
 
 void closeSettingsMenu() {
@@ -217,8 +201,6 @@ void settingsMenuCtrl() {
 
   // Change options
   if (pressed_pad[PAD_ENTER] || pressed_pad[PAD_LEFT] || pressed_pad[PAD_RIGHT]) {
-    changed = 1;
-
     switch (option->type) {
       case SETTINGS_OPTION_TYPE_BOOLEAN:
         if (option->value)

@@ -21,13 +21,11 @@
 
 #include "context_menu.h"
 
-extern ContextMenu context_menu_home;
 extern ContextMenu context_menu_main;
 extern ContextMenu context_menu_sort;
 extern ContextMenu context_menu_more;
 
 void initContextMenuWidth();
-void setContextMenuHomeVisibilities();
 void setContextMenuMainVisibilities();
 void setContextMenuSortVisibilities();
 void setContextMenuMoreVisibilities();

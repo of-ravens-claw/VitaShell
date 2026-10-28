@@ -371,35 +371,6 @@ EXIT_ARCHIVE_OPEN:
   return sceKernelExitDeleteThread(0);
 }
 
-static int mediaPathHandler(const char *path) {
-  // Avoid export-ception
-  if (strncasecmp(path, "ux0:music/", 10) == 0 ||
-      strncasecmp(path, "ux0:video/", 10) == 0 ||
-      strncasecmp(path, "ux0:picture/", 12) == 0) {
-    return 1;
-  }
-
-  // The files allowed
-  int type = getFileType(path);
-  switch (type) {
-    case FILE_TYPE_BMP:
-    case FILE_TYPE_JPEG:
-    case FILE_TYPE_PNG:
-    case FILE_TYPE_MP4:
-      return 0;
-  }
-
-  // Folders are allowed too
-  SceIoStat stat;
-  memset(&stat, 0, sizeof(SceIoStat));
-  if (sceIoGetstat(path, &stat) >= 0 && SCE_S_ISDIR(stat.st_mode)) {
-    return 0;
-  }
-
-  // Ignore the rest
-  return 1;
-}
-
 int hash_thread(SceSize args_size, HashArguments *args) {
   SceUID thid = -1;
 

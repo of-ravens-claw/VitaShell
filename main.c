@@ -300,31 +300,6 @@ int dialogSteps() {
       break;
     }
     
-    case DIALOG_STEP_USB_ATTACH_WAIT:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        if (checkFileExist("sdstor0:uma-lp-act-entire")) {
-          sceMsgDialogClose();
-        }
-      } else {
-        if (msg_result == MESSAGE_DIALOG_RESULT_NONE ||
-            msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-          setDialogStep(DIALOG_STEP_NONE);
-          
-          if (checkFileExist("sdstor0:uma-lp-act-entire")) {
-            int res = vshIoMount(0xF00, NULL, 0, 0, 0, 0);
-            if (res < 0)
-              errorDialog(res);
-            else
-              infoDialog(language_container[UMA0_MOUNTED]);
-            refresh = REFRESH_MODE_NORMAL;
-          }
-        }
-      }
-      
-      break;
-    }
-    
     case DIALOG_STEP_FTP_WAIT:
     {
       if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {

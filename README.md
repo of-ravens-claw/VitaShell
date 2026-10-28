@@ -9,7 +9,7 @@ See [CHANGELOG.md](CHANGELOG.md)
 ## Building
 Install [VitaSDK](https://github.com/vitasdk), then install the necessary packages:
 ```
-vdpm install expat libarchive libftpvita libvita2d
+vdpm install libarchive libftpvita libvita2d
 ```
 
 Now you can build using the following command:
