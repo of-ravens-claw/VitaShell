@@ -19,13 +19,10 @@ FILE_COLOR                   = 0xFFFFFFFF    # White
 SFO_COLOR                    = 0xFFFFFFFF    # White
 TXT_COLOR                    = 0xFFFFFFFF    # White
 FOLDER_COLOR                 = 0xFFFFFF00    # Cyan
-IMAGE_COLOR                  = 0xFF7F00FF    # Rose
 ARCHIVE_COLOR                = 0xFF007FFF    # Orange
 SCROLL_BAR_COLOR             = 0xFFFF7F00    # Azure
 SCROLL_BAR_BG_COLOR          = 0xFF7F7F7F    # Gray
 MARKED_COLOR                 = 0x4FFF7F00    # Azure with alpha
-FILE_SYMLINK_COLOR           = 0xFFFFFFFF    # White
-FOLDER_SYMLINK_COLOR         = 0xFFFFFFFF    # White
 
 # Context menu colors
 CONTEXT_MENU_TEXT_COLOR      = 0xFFFFFFFF    # White
@@ -51,16 +48,3 @@ TEXT_FOCUS_COLOR             = 0xFF00FF00    # Green
 TEXT_LINE_NUMBER_COLOR       = 0xFF4F4F4F    # Darkgray #3
 TEXT_LINE_NUMBER_COLOR_FOCUS = 0xFF7F7F7F    # Gray
 TEXT_HIGHLIGHT_COLOR         = 0xFF80F5FF    # Yellow
-
-# Photo viewer colors
-PHOTO_ZOOM_COLOR             = 0xFFFFFFFF    # White
-
-# Audio player colors
-AUDIO_INFO_ASSIGN            = 0xFFFFFF00    # Cyan
-AUDIO_INFO                   = 0xFFFFFFFF    # White
-AUDIO_SPEED                  = 0xFFFFFFFF    # White
-AUDIO_TIME_CURRENT           = 0xFF00FF00    # Green
-AUDIO_TIME_SLASH             = 0xFFFFFFFF    # White
-AUDIO_TIME_TOTAL             = 0xFFFFFFFF    # White
-AUDIO_TIME_BAR               = 0xFFFF7F00    # Azure
-AUDIO_TIME_BAR_BG            = 0xFF7F7F7F    # Gray

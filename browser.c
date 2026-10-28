@@ -68,33 +68,8 @@ static char dir_level_archive = -1;
 static int scroll_count = 0;
 static float scroll_x = FILE_X;
 
-static void fileBrowserHandleSymlink(FileListEntry* file_entry);
 static void fileBrowserHandleFolder(FileListEntry* file_entry);
 static void fileBrowserHandleFile(FileListEntry* file_entry);
-
-// escape from dir hierarchy with a symlink
-typedef struct SymlinkDirectoryPath {
-  struct SymlinkDirectoryPath* previous;
-  // contains / at the end, is directory where jumped from
-  char last_path[MAX_PATH_LENGTH];
-  // contains / at the end, is directory where jumped to
-  char last_hook[MAX_PATH_LENGTH];
-} SymlinkDirectoryPath;
-
-static SymlinkDirectoryPath* symlink_directory_path = NULL;
-static SymlinkDirectoryPath* symlink_directory_path_head = NULL;
-
-static void storeSymlinkPath(SymlinkDirectoryPath * path) {
-  if (!symlink_directory_path) {
-    symlink_directory_path = path;
-    symlink_directory_path_head = path;
-    symlink_directory_path->previous = 0;
-  } else {
-    SymlinkDirectoryPath *prev = symlink_directory_path;
-    symlink_directory_path = path;
-    symlink_directory_path->previous = prev;
-  }
-}
 
 void dirLevelUp() {
   if (dir_level < MAX_DIR_LEVELS - 1) {
@@ -174,16 +149,6 @@ static void dirUp() {
       !strstr(copy_list.path, pfs_mounted_path)) { // nothing has been copied from pfs path
     // Then umount
     pfsUmount();
-  }
-
-  if (symlink_directory_path
-      && strncmp(file_list.path, symlink_directory_path->last_hook, MAX_PATH_LENGTH) == 0) {
-    strcpy(file_list.path, symlink_directory_path->last_path);
-    SymlinkDirectoryPath* prev = symlink_directory_path->previous;
-    free(symlink_directory_path);
-    symlink_directory_path = prev;
-    dir_level--;
-    goto DIR_UP_RETURN;
   }
 
   removeEndSlash(file_list.path);
@@ -513,12 +478,10 @@ static int fileBrowserMenuCtrl() {
 
     fileListEmpty(&mark_list);
 
-    // Handle file, symlink or folder
+    // Handle file or folder
     FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
     if (file_entry) {
-      if (file_entry->is_symlink) {
-        fileBrowserHandleSymlink(file_entry);
-      } else if (file_entry->is_folder) {
+      if (file_entry->is_folder) {
         fileBrowserHandleFolder(file_entry);
       } else {
         fileBrowserHandleFile(file_entry);
@@ -570,8 +533,6 @@ static void fileBrowserHandleFolder(FileListEntry *file_entry) {
 // escape from dir level structure so that parent directory is browsed
 // where this jump came from and not the hierarchically higher folder
 int jump_to_directory_track_current_path(char *path) {
-  SymlinkDirectoryPath *symlink_path = malloc(sizeof(SymlinkDirectoryPath));
-
   int archive = 0;
   while(isInArchive()) {
     archive = 1;
@@ -581,63 +542,7 @@ int jump_to_directory_track_current_path(char *path) {
     dirUpCloseArchive();
   }
 
-  if (symlink_path) {
-    strncpy(symlink_path->last_path, file_list.path, MAX_PATH_LENGTH);
-    strncpy(symlink_path->last_hook, path, MAX_PATH_LENGTH - 1);
-    dirLevelUp();
-    int _dir_level = dir_level; // we escape from hierarchical dir level structure
-    if (change_to_directory(path) < 0) {
-      free(symlink_path);
-      return VITASHELL_ERROR_NAVIGATION;
-    }
-    storeSymlinkPath(symlink_path);
-    dir_level = _dir_level;
-    refreshFileList();
-  }
   return 0;
-}
-
-static void fileBrowserHandleSymlink(FileListEntry *file_entry) {
-  if ((file_entry->symlink->to_file == 1 && !checkFileExist(file_entry->symlink->target_path))
-      || (file_entry->symlink->to_file == 0 && !checkFolderExist(file_entry->symlink->target_path))) {
-    // TODO: What if in archive?
-    snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
-    textViewer(cur_file);
-    return;
-  }
-  if (file_entry->symlink->to_file == 0) {
-    if (jump_to_directory_track_current_path(file_entry->symlink->target_path) < 0) {
-      errorDialog(VITASHELL_ERROR_SYMLINK_INVALID_PATH);
-    }
-  } else {
-    char *target_base_directory = getBaseDirectory(file_entry->symlink->target_path);
-    if (!target_base_directory) {
-      errorDialog(VITASHELL_ERROR_SYMLINK_CANT_RESOLVE_BASEDIR);
-      return;
-    }
-    char *target_file_name = getFilename(file_entry->symlink->target_path);
-    if (!target_file_name) {
-      errorDialog(VITASHELL_ERROR_SYMLINK_CANT_RESOLVE_FILENAME);
-      return;
-    }
-    if (jump_to_directory_track_current_path(target_base_directory) < 0) {
-      errorDialog(VITASHELL_ERROR_SYMLINK_INVALID_PATH);
-      return;
-    }
-    FileListEntry *resolved_file_entry = fileListFindEntry(&file_list, target_file_name);
-    if (!resolved_file_entry) {
-      errorDialog(VITASHELL_ERROR_SYMLINK_INVALID_PATH);
-      return;
-    }
-    fileBrowserHandleFile(resolved_file_entry);
-    dirUp();
-
-    free(target_file_name);
-    free(target_base_directory);
-  }
-  int res = refreshFileList();
-  if (res < 0)
-    errorDialog(res);
 }
 
 int browserMain() {
@@ -720,17 +625,8 @@ int browserMain() {
         float y = START_Y + (i * FONT_Y_SPACE);
 
         vita2d_texture *icon = NULL;
-        if (file_entry->is_symlink) {
-          if (file_entry->symlink->to_file) {
-            color = FILE_SYMLINK_COLOR;
-            icon = file_symlink_icon;
-          } else {
-            color = FOLDER_SYMLINK_COLOR;
-            icon = folder_symlink_icon;
-          }
-        }
         // Folder
-        else if (file_entry->is_folder) {
+        if (file_entry->is_folder) {
           color = FOLDER_COLOR;
           icon = folder_icon;
         } else {
@@ -781,13 +677,8 @@ int browserMain() {
         char file_name[MAX_PATH_LENGTH];
         memset(file_name, 0, sizeof(MAX_PATH_LENGTH));
 
-        if (file_entry->is_symlink) {
-          snprintf(file_name, MAX_PATH_LENGTH, "%s  → %s",
-                   file_entry->name, file_entry->symlink->target_path);
-        } else {
-          strncpy(file_name, file_entry->name, file_entry->name_length + 1);
-          file_name[file_entry->name_length] = '\0';
-        }
+        strncpy(file_name, file_entry->name, file_entry->name_length + 1);
+        file_name[file_entry->name_length] = '\0';
         if (i == rel_pos) {
           int width = (int)pgf_text_width(file_name);
           if (width >= MAX_NAME_WIDTH) {

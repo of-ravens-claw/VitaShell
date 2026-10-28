@@ -38,13 +38,10 @@ extern int FILE_COLOR;
 extern int SFO_COLOR;
 extern int TXT_COLOR;
 extern int FOLDER_COLOR;
-extern int IMAGE_COLOR;
 extern int ARCHIVE_COLOR;
 extern int SCROLL_BAR_COLOR;
 extern int SCROLL_BAR_BG_COLOR;
 extern int MARKED_COLOR;
-extern int FILE_SYMLINK_COLOR;
-extern int FOLDER_SYMLINK_COLOR;
 
 // Context menu colors
 extern int CONTEXT_MENU_TEXT_COLOR;
@@ -71,23 +68,9 @@ extern int TEXT_LINE_NUMBER_COLOR;
 extern int TEXT_LINE_NUMBER_COLOR_FOCUS;
 extern int TEXT_HIGHLIGHT_COLOR;
 
-// Photo viewer colors
-extern int PHOTO_ZOOM_COLOR;
-
-// Audio player colors
-extern int AUDIO_INFO_ASSIGN;
-extern int AUDIO_INFO;
-extern int AUDIO_SPEED;
-extern int AUDIO_TIME_CURRENT;
-extern int AUDIO_TIME_SLASH;
-extern int AUDIO_TIME_TOTAL;
-extern int AUDIO_TIME_BAR;
-extern int AUDIO_TIME_BAR_BG;
-
 extern vita2d_texture *folder_icon, *file_icon, *archive_icon, *sfo_icon, *text_icon,
             *ftp_image, *dialog_image, *context_image, *context_more_image, *settings_image, *battery_image,
-            *battery_bar_red_image, *battery_bar_green_image, *battery_bar_charge_image,
-    *folder_symlink_icon, *file_symlink_icon;
+            *battery_bar_red_image, *battery_bar_green_image, *battery_bar_charge_image;
 
 void loadTheme();
 

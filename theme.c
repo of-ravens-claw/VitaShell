@@ -30,16 +30,9 @@ INCLUDE_EXTERN_RESOURCE(default_battery_bar_green_png);
 INCLUDE_EXTERN_RESOURCE(default_battery_bar_red_png);
 INCLUDE_EXTERN_RESOURCE(default_battery_png);
 INCLUDE_EXTERN_RESOURCE(default_cover_png);
-INCLUDE_EXTERN_RESOURCE(default_fastforward_png);
-INCLUDE_EXTERN_RESOURCE(default_fastrewind_png);
 INCLUDE_EXTERN_RESOURCE(default_file_icon_png);
-INCLUDE_EXTERN_RESOURCE(default_file_symlink_icon_png);
 INCLUDE_EXTERN_RESOURCE(default_folder_icon_png);
-INCLUDE_EXTERN_RESOURCE(default_folder_symlink_icon_png);
 INCLUDE_EXTERN_RESOURCE(default_ftp_png);
-INCLUDE_EXTERN_RESOURCE(default_image_icon_png);
-INCLUDE_EXTERN_RESOURCE(default_pause_png);
-INCLUDE_EXTERN_RESOURCE(default_play_png);
 INCLUDE_EXTERN_RESOURCE(default_sfo_icon_png);
 INCLUDE_EXTERN_RESOURCE(default_text_icon_png);
 
@@ -59,12 +52,9 @@ int SETTINGS_MENU_OPTION_COLOR;
 // File browser colors
 int FOCUS_COLOR;
 int FILE_COLOR;
-int FILE_SYMLINK_COLOR;
-int FOLDER_SYMLINK_COLOR;
 int SFO_COLOR;
 int TXT_COLOR;
 int FOLDER_COLOR;
-int IMAGE_COLOR;
 int ARCHIVE_COLOR;
 int SCROLL_BAR_COLOR;
 int SCROLL_BAR_BG_COLOR;
@@ -95,20 +85,7 @@ int TEXT_LINE_NUMBER_COLOR;
 int TEXT_LINE_NUMBER_COLOR_FOCUS;
 int TEXT_HIGHLIGHT_COLOR;
 
-// Photo viewer colors
-int PHOTO_ZOOM_COLOR;
-
-// Audio player colors
-int AUDIO_INFO_ASSIGN;
-int AUDIO_INFO;
-int AUDIO_SPEED;
-int AUDIO_TIME_CURRENT;
-int AUDIO_TIME_SLASH;
-int AUDIO_TIME_TOTAL;
-int AUDIO_TIME_BAR;
-int AUDIO_TIME_BAR_BG;
-
-vita2d_texture *folder_icon = NULL, *folder_symlink_icon = NULL, *file_icon = NULL,*file_symlink_icon = NULL, *archive_icon = NULL,
+vita2d_texture *folder_icon = NULL, *file_icon = NULL, *archive_icon = NULL,
     *sfo_icon = NULL, *text_icon = NULL,
          *ftp_image = NULL, *dialog_image = NULL, *context_image = NULL, *context_more_image = NULL, *settings_image = NULL, *battery_image = NULL,
          *battery_bar_red_image = NULL, *battery_bar_green_image = NULL, *battery_bar_charge_image = NULL;
@@ -129,9 +106,7 @@ ThemeImage theme_images[] = {
   { "battery_bar_green.png", &_binary_resources_default_battery_bar_green_png_start, &battery_bar_green_image },
   { "battery_bar_red.png", &_binary_resources_default_battery_bar_red_png_start, &battery_bar_red_image },
   { "file_icon.png", &_binary_resources_default_file_icon_png_start, &file_icon },
-  { "file_symlink_icon.png", &_binary_resources_default_file_symlink_icon_png_start, &file_symlink_icon },
   { "folder_icon.png", &_binary_resources_default_folder_icon_png_start, &folder_icon },
-  { "folder_symlink_icon.png", &_binary_resources_default_folder_symlink_icon_png_start, &folder_symlink_icon },
   { "ftp.png", &_binary_resources_default_ftp_png_start, &ftp_image },
   { "sfo_icon.png", &_binary_resources_default_sfo_icon_png_start, &sfo_icon },
   { "text_icon.png", &_binary_resources_default_text_icon_png_start, &text_icon },
@@ -158,12 +133,9 @@ void loadTheme() {
     // File browser colors
     COLOR_ENTRY(FOCUS_COLOR),
     COLOR_ENTRY(FILE_COLOR),
-    COLOR_ENTRY(FILE_SYMLINK_COLOR),
-    COLOR_ENTRY(FOLDER_SYMLINK_COLOR),
     COLOR_ENTRY(SFO_COLOR),
     COLOR_ENTRY(TXT_COLOR),
     COLOR_ENTRY(FOLDER_COLOR),
-    COLOR_ENTRY(IMAGE_COLOR),
     COLOR_ENTRY(ARCHIVE_COLOR),
     COLOR_ENTRY(SCROLL_BAR_COLOR),
     COLOR_ENTRY(SCROLL_BAR_BG_COLOR),
@@ -193,19 +165,6 @@ void loadTheme() {
     COLOR_ENTRY(TEXT_LINE_NUMBER_COLOR),
     COLOR_ENTRY(TEXT_LINE_NUMBER_COLOR_FOCUS),
     COLOR_ENTRY(TEXT_HIGHLIGHT_COLOR),
-
-    // Photo viewer colors
-    COLOR_ENTRY(PHOTO_ZOOM_COLOR),
-
-    // Audio player colors
-    COLOR_ENTRY(AUDIO_INFO_ASSIGN),
-    COLOR_ENTRY(AUDIO_INFO),
-    COLOR_ENTRY(AUDIO_SPEED),
-    COLOR_ENTRY(AUDIO_TIME_CURRENT),
-    COLOR_ENTRY(AUDIO_TIME_SLASH),
-    COLOR_ENTRY(AUDIO_TIME_TOTAL),
-    COLOR_ENTRY(AUDIO_TIME_BAR),
-    COLOR_ENTRY(AUDIO_TIME_BAR_BG),
   };
 
   int i;

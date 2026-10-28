@@ -46,8 +46,6 @@ static char *devices[] = {
 
 #define N_DEVICES (sizeof(devices) / sizeof(char **))
 
-const char symlink_header_bytes[SYMLINK_HEADER_SIZE] = {0xF1, 0x1E, 0x00, 0x00};
-
 int allocateReadFile(const char *file, void **buffer) {
   SceUID fd = sceIoOpen(file, SCE_O_RDONLY, 0);
   if (fd < 0)
@@ -960,7 +958,6 @@ int fileListGetDeviceEntries(FileList *list) {
           strcpy(entry->name, devices[i]);
           entry->is_folder = 1;
           entry->type = FILE_TYPE_UNKNOWN;
-          entry->is_symlink = 0;
 
           SceIoDevInfo info;
           memset(&info, 0, sizeof(SceIoDevInfo));
@@ -1007,7 +1004,6 @@ int fileListGetDirectoryEntries(FileList *list, const char *path, int sort) {
     strcpy(entry->name, DIR_UP);
     entry->is_folder = 1;
     entry->type = FILE_TYPE_UNKNOWN;
-    entry->is_symlink = 0;
     fileListAddEntry(list, entry, sort);
   }
 
@@ -1022,8 +1018,6 @@ int fileListGetDirectoryEntries(FileList *list, const char *path, int sort) {
       FileListEntry *entry = malloc(sizeof(FileListEntry));
       if (entry) {
         entry->is_folder = SCE_S_ISDIR(dir.d_stat.st_mode);
-        entry->is_symlink = 0;
-        entry->symlink = NULL;
 
         if (entry->is_folder) {
           entry->name_length = strlen(dir.d_name) + 1;
@@ -1038,29 +1032,6 @@ int fileListGetDirectoryEntries(FileList *list, const char *path, int sort) {
           strcpy(entry->name, dir.d_name);
           entry->type = getFileType(entry->name);
           list->files++;
-
-          if (dir.d_stat.st_size <= SYMLINK_MAX_SIZE) {
-            char *p = malloc(strlen(path) + strlen(dir.d_name) + 2);
-            if (!p) {
-              return VITASHELL_ERROR_INTERNAL;
-            }
-            snprintf(p, MAX_PATH_LENGTH, "%s%s%s",
-                     path, hasEndSlash(path) ? "" : "/", dir.d_name);
-
-            Symlink* symlink = malloc(sizeof(Symlink));
-            if (!symlink) {
-              return VITASHELL_ERROR_INTERNAL;
-            }
-            int res = resolveSimLink(symlink, p);
-            if (res < 0) {
-              if (symlink)
-                free(symlink);
-            } else {
-              entry->is_symlink = 1;
-              entry->symlink = symlink;
-            }
-            free(p);
-          }
         }
         entry->size = dir.d_stat.st_size;
         memcpy(&entry->ctime, (SceDateTime *) &dir.d_stat.st_ctime, sizeof(SceDateTime));
@@ -1090,59 +1061,6 @@ int fileListGetEntries(FileList *list, const char *path, int sort) {
   }
 
   return fileListGetDirectoryEntries(list, path, sort);
-}
-
-// returns < 0 on error
-int resolveSimLink(Symlink *symlink, const char *path) {
-  SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
-  if (fd < 0)
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  char magic[SYMLINK_HEADER_SIZE + 1];
-  magic[SYMLINK_HEADER_SIZE] = '\0';
-
-  if (sceIoRead(fd, &magic, SYMLINK_HEADER_SIZE) < SYMLINK_HEADER_SIZE) {
-    sceIoClose(fd);
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  }
-  if(memcmp(magic, symlink_header_bytes, SYMLINK_HEADER_SIZE) != 0) {
-    sceIoClose(fd);
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  }
-  char *resolve = (char *) malloc(MAX_PATH_LENGTH);
-  if (!resolve) {
-    sceIoClose(fd);
-    return VITASHELL_ERROR_INTERNAL;
-  }
-  int bytes_read = sceIoRead(fd, resolve, MAX_PATH_LENGTH - 1);
-  sceIoClose(fd);
-
-  if (bytes_read <= 0) {
-    free(resolve);
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  }
-  resolve[bytes_read] = '\0';
-  SceIoStat io_stat;
-  memset(&io_stat, 0, sizeof(SceIoStat));
-  if (sceIoGetstat(resolve, &io_stat) < 0) {
-    free(resolve);
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  }
-  symlink->to_file = !SCE_S_ISDIR(io_stat.st_mode);
-  symlink->target_path = resolve;
-  symlink->target_path_length = bytes_read + 1;
-  return 0;
-}
-
-// return < 0 on error
-int createSymLink(const char *store_location, const char *target) {
-  SceUID fd = sceIoOpen(store_location, SCE_O_WRONLY | SCE_O_CREAT, 0777);
-  if (fd < 0) {
-    return VITASHELL_ERROR_SYMLINK_INTERNAL;
-  }
-  sceIoWrite(fd, (void*) &symlink_header_bytes, SYMLINK_HEADER_SIZE);
-  sceIoWrite(fd, (void*) target, strnlen(target, MAX_PATH_LENGTH));
-  sceIoClose(fd);
-  return 0;
 }
 
 // get directory path from filename

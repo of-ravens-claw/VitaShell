@@ -21,6 +21,7 @@
 - Remove file SHA1 calculation.
 - Remove 'more' context menu.
 - Remove photo viewer.
+- Remove symlinks. (why were they even a thing?)
 
 ### Changelog 2.03
 - Added support for FW 3.74.
