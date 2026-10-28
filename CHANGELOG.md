@@ -1,8 +1,9 @@
 # Changelog
 
 ### Changelog 2.03
-
-- Add OFW 3.74 support
+- Added support for FW 3.74.
+- Added support for FW 3.63.
+- Added support for FW 3.61.
 
 ### Changelog 2.02
 - Reverted PSM refresh due to crashes.
