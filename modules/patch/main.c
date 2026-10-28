@@ -32,28 +32,38 @@ int module_start(SceSize args, void *argp) {
   // Patch to allow Memory Card remount
   uint32_t nop_nop_opcode = 0xBF00BF00;
   switch (info.module_nid) {
-    case 0x94CEFE4B: // 3.55 retail
-    case 0xDFBC288C: // 3.57 retail
-    case 0xDBB29DB7: // 3.60 retail
-    case 0xB5F8EA7C: // 3.61 retail
-    case 0x23B967C5: // 3.63 retail
-    case 0x1C9879D6: // 3.65 retail
+    case 0xF1102066: // 3.30
+    case 0xA1BE0ED6: // 3.35
+		case 0x6ABD8ABA: // 3.36
+      hooks[0] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xE4E6, &nop_nop_opcode, 4);
+      hooks[1] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xE516, &nop_nop_opcode, 2);
+      break;
+
+    case 0xE2EDFCC3: // 3.50
+    case 0x8C76997D: // 3.51
+		case 0x1D32C3FF: // 3.52
+    case 0x94CEFE4B: // 3.55
+    case 0xDFBC288C: // 3.57
+    case 0xDBB29DB7: // 3.60
+    case 0xB5F8EA7C: // 3.61
+    case 0x23B967C5: // 3.63
+    case 0x1C9879D6: // 3.65
       hooks[0] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB338, &nop_nop_opcode, 4);
       hooks[1] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB368, &nop_nop_opcode, 2);
       break;
       
-    case 0x54E2E984: // 3.67 retail
-    case 0xC3C538DE: // 3.68 retail
+    case 0x54E2E984: // 3.67
+    case 0xC3C538DE: // 3.68
       hooks[0] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB344, &nop_nop_opcode, 4);
       hooks[1] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB374, &nop_nop_opcode, 2);
       break;
       
-    case 0x321E4852: // 3.69 retail
-    case 0x700DA0CD: // 3.70 retail
-    case 0xF7846B4E: // 3.71 retail
-    case 0xA8E80BA8: // 3.72 retail
-    case 0xB299D195: // 3.73 retail
-    case 0x30007BD3: // 3.74 retail
+    case 0x321E4852: // 3.69
+    case 0x700DA0CD: // 3.70
+    case 0xF7846B4E: // 3.71
+    case 0xA8E80BA8: // 3.72
+    case 0xB299D195: // 3.73
+    case 0x30007BD3: // 3.74
       hooks[0] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB34C, &nop_nop_opcode, 4);
       hooks[1] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xB37C, &nop_nop_opcode, 2);
       break;

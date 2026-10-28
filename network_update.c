@@ -53,8 +53,8 @@ int network_update_thread(SceSize args, void *argp) {
     if (getDialogStep() == DIALOG_STEP_NONE) {
       // New update available
       if (version > VITASHELL_VERSION) {
-        int major = (version >> 0x18) & 0xFF;
-        int minor = (version >> 0x10) & 0xFF;
+        int major = (version >> 24) & 0xFF;
+        int minor = (version >> 16) & 0xFF;
 
         char version_string[8];
         sprintf(version_string, "%X.%02X", major, minor);
