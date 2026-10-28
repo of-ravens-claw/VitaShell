@@ -45,7 +45,6 @@
 #include "sfo.h"
 #include "coredump.h"
 #include "usb.h"
-#include "qr.h"
 #include "pfs.h"
 
 int _newlib_heap_size_user = 128 * 1024 * 1024;
@@ -821,22 +820,6 @@ int dialogSteps() {
 
       break;
     }
-    
-    case DIALOG_STEP_INSTALL_CONFIRMED_QR:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        InstallArguments args;
-        args.file = getLastDownloadQR();
-
-        setDialogStep(DIALOG_STEP_INSTALLING);
-
-        SceUID thid = sceKernelCreateThread("install_thread", (SceKernelThreadEntry)install_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, sizeof(InstallArguments), &args);
-      }
-
-      break;
-    }
  
     case DIALOG_STEP_INSTALL_WARNING:
     {
@@ -928,94 +911,6 @@ int dialogSteps() {
 			removePath("ux0:patch/VITASHELL", NULL);
       launchAppByUriExit("VSUPDATER");
       setDialogStep(DIALOG_STEP_NONE);
-      break;
-    }
-      
-    case DIALOG_STEP_QR:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        setDialogStep(DIALOG_STEP_NONE);
-        setScannedQR(0);
-      } else if (scannedQR()) {
-        setDialogStep(DIALOG_STEP_QR_DONE);
-        sceMsgDialogClose();
-        setScannedQR(0);
-        stopQR();
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_DONE:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        setDialogStep(DIALOG_STEP_QR_WAITING);
-        stopQR();
-        SceUID thid = sceKernelCreateThread("qr_scan_thread", (SceKernelThreadEntry)qr_scan_thread, 0x10000100, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, 0, NULL);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_WAITING:
-    {
-      break;
-    }
-    
-    case DIALOG_STEP_QR_CONFIRM:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[DOWNLOADING]);
-        setDialogStep(DIALOG_STEP_QR_DOWNLOADING);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_DOWNLOADED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_DOWNLOADED_VPK:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[INSTALLING]);
-        setDialogStep(DIALOG_STEP_INSTALL_CONFIRMED_QR);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_OPEN_WEBSITE:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        setDialogStep(DIALOG_STEP_NONE);
-        sceAppMgrLaunchAppByUri(0xFFFFF, getLastQR());
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        setDialogStep(DIALOG_STEP_NONE);
-        sceAppMgrLaunchAppByUri(0xFFFFF, getLastQR());
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_QR_SHOW_CONTENTS:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
       break;
     }
     

@@ -188,13 +188,6 @@ USB_NOT_CONNECTED                    = "使用USB数据线将本机连接到PC."
 USB_CONNECTION_NOT_AVAILABLE         = "USB连接 在本设备上不可用."
 USB_WAIT_ATTACH                      = "请连接USB闪存驱动器以继续.\如果已连接, 请 断开\并 重新连接."
 
-# QR strings
-QR_SCANNING                          = "正在扫描 QR码..."
-QR_OPEN_WEBSITE                      = "你是否要打开这个 链接:\%s"
-QR_SHOW_CONTENTS                     = "QR码 信息:\%s"
-QR_CONFIRM_INSTALL                   = "你是否要安装这个软件包:\%s\File: %s\Size: %s"
-QR_CONFIRM_DOWNLOAD                  = "你是否要下载这个文件:\%s\File: %s\Size: %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "正在搜索可接收的...\请稍候."
 ADHOC_SELECT_PSVITA                  = "选择一台 PS Vita:"

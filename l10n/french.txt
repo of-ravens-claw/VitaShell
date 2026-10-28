@@ -170,13 +170,6 @@ USB_NOT_CONNECTED                    = "Connectez ce sytème à un PC en utilisa
 USB_CONNECTION_NOT_AVAILABLE         = "Connexion par USB non disponible pour ce dispositif."
 USB_WAIT_ATTACH                      = "Veuillez brancher un lecteur USB pour continuer.\S'il a déjà été branché, veuillez le débrancher\puis le rebrancher."
 
-# QR strings
-QR_SCANNING                         = "Scan de code QR..."
-QR_OPEN_WEBSITE                     = "Voulez-vous ouvrir cette URL? :\%s"
-QR_SHOW_CONTENTS                    = "Le code QR dit:\%s"
-QR_CONFIRM_INSTALL                  = "Voulez-vous installer ce paquet? :\%s\Fichier: %s\Taille: %s"
-QR_CONFIRM_DOWNLOAD                 = "Voulez-vous télécharger ce fichier? :\%s\Fichier: %s\Taille: %s"
-
 # Others
 IMC0_MOUNTED                         = "imc0: montée."
 SAFE_MODE                            = "MODE SECURISÉ"

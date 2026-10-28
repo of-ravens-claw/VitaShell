@@ -188,13 +188,6 @@ USB_NOT_CONNECTED                    = "USB bagli degil."
 USB_CONNECTION_NOT_AVAILABLE         = "Su an USB baglantisi saglanamiyor."
 USB_WAIT_ATTACH                      = "USB takili beklemede"
 
-# QR strings
-QR_SCANNING                         = "QR kod taramasi"
-QR_OPEN_WEBSITE                     = "QR kod siteyi ac URL:\%s"
-QR_SHOW_CONTENTS                    = "QR kod icerigi:\%s"
-QR_CONFIRM_INSTALL                  = "QR kod yuklemeyi onayla:\%s\Dosya: %s\Klasor: %s"
-QR_CONFIRM_DOWNLOAD                 = "QR kod indirmeyi onayla:\%s\Dosya: %s\Klasor: %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "Ad-Hoc PSVITA aramasi."
 ADHOC_SELECT_PSVITA                  = "Ad-Hoc Sec PS Vita:"

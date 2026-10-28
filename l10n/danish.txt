@@ -187,13 +187,6 @@ USB_NOT_CONNECTED                    = "Forbind dette system til en PC ved hjæl
 USB_CONNECTION_NOT_AVAILABLE         = "USB forbindelse er ikke tilgængelig på denne enhed."
 USB_WAIT_ATTACH                      = "Indsæt et USB flash drev for at fortsætte.\Hvis det allerede er indsat, så fjern drevet\og tilslut det igen."
 
-# QR strings
-QR_SCANNING                          = "Scanner efter QR koder..."
-QR_OPEN_WEBSITE                      = "Vil du åbne denne URL:\%s"
-QR_SHOW_CONTENTS                     = "QR kode siger:\%s"
-QR_CONFIRM_INSTALL                   = "Vil du installere denne pakke:\%s\Fil: %s\Størrelse: %s"
-QR_CONFIRM_DOWNLOAD                  = "Vil du hente denne fil:\%s\Fil: %s\Størrelse: %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "Søger efter PS Vita at modtage fra...\Vent venligst."
 ADHOC_SELECT_PSVITA                  = "Vælg en PS Vita:"

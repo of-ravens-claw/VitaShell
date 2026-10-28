@@ -22,7 +22,6 @@
 #include "file.h"
 #include "package_installer.h"
 #include "utils.h"
-#include "qr.h"
 #include "rif.h"
 
 #include "audio/vita_audio.h"
@@ -372,7 +371,6 @@ void initVitaShell() {
   initVita2dLib();
   initSceAppUtil();
   initNet();
-  initQR();
   initSQLite();
 
   // Init power tick thread
@@ -437,7 +435,6 @@ void finishVitaShell() {
   finishNet();
   finishSceAppUtil();
   finishVita2dLib();
-  finishQR();
   vitaAudioShutdown();
   
   // Unload modules

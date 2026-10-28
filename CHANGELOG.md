@@ -1,5 +1,8 @@
 # Changelog
 
+### Changelog 2.04 (stripped)
+- Remove QR scanner.
+
 ### Changelog 2.03
 - Added support for FW 3.74.
 - Added support for FW 3.61 and 3.63.

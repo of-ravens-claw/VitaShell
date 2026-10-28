@@ -188,13 +188,6 @@ USB_NOT_CONNECTED                    = "USB 케이블을 PC와 연결해 주세�
 USB_CONNECTION_NOT_AVAILABLE         = "USB 연결은 이 기기에서 지원되지 않습니다."
 USB_WAIT_ATTACH                      = "먼저 USB 플래시 드라이브를 장착한 후 진행해 주세요.\만약 이미 장착되어 있다면, 제거하신 후\다시 장착해 주세요."
 
-# QR strings
-QR_SCANNING                          = "QR 코드 스캔 중..."
-QR_OPEN_WEBSITE                      = "이 URL 주소를 여시겠습니까 :\%s"
-QR_SHOW_CONTENTS                     = "QR Code 메시지 :\%s"
-QR_CONFIRM_INSTALL                   = "다음 패키지를 설치하시겠습니까 :\%s\파일 : %s\크기 : %s"
-QR_CONFIRM_DOWNLOAD                  = "다음 파일을 다운로드 하시겠습니까 :\%s\파일 : %s\크기 : %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "수신을 위해 PS Vita 탐색 중...\잠시 기다려 주세요."
 ADHOC_SELECT_PSVITA                  = "PS Vita 선택:"

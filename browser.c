@@ -43,7 +43,6 @@
 #include "sfo.h"
 #include "coredump.h"
 #include "usb.h"
-#include "qr.h"
 #include "pfs.h"
 
 // File lists
@@ -467,13 +466,6 @@ int shortCuts() {
         return 0;
       }
     }
-  }
-
-  // QR
-  if (current_pad[PAD_CIRCLE] && enabledQR()) {
-    startQR();
-    initMessageDialog(MESSAGE_DIALOG_QR_CODE, language_container[QR_SCANNING]);
-    setDialogStep(DIALOG_STEP_QR);
   }
 
   return 0;

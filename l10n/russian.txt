@@ -188,13 +188,6 @@ USB_NOT_CONNECTED					 = "Передача данных:\\Подключите P
 USB_CONNECTION_NOT_AVAILABLE		 = "Ошибка:\\Невозможно активировать USB соединение на этом устройстве"
 USB_WAIT_ATTACH						 = "Подключите USB накопитель, прежде чем продолжить.\Если кабель уже вставлен, попробуйте\извлечь его и подключить повторно"
 
-# QR strings
-QR_SCANNING							 = "Поднесите приставку к QR-коду"
-QR_OPEN_WEBSITE						 = "Вы хотите открыть этот сайт?:\%s"
-QR_SHOW_CONTENTS					 = "QR-код содержит:\%s"
-QR_CONFIRM_INSTALL					 = "Вы хотите установить:\%s\Файл: %s\Размер которого: %s"
-QR_CONFIRM_DOWNLOAD					 = "Вы хотите скачать:\%s\Файл: %s\Размер которого: %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA		 = "Поиск PSVita для получения файла\Пожалуйста, подождите"
 ADHOC_SELECT_PSVITA					 = "Выберите PSVita:"

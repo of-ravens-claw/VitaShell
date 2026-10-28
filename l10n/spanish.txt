@@ -188,13 +188,6 @@ USB_NOT_CONNECTED                    = "Conecta este sistema a un PC usando un c
 USB_CONNECTION_NOT_AVAILABLE         = "La conexión USB no está disponible en este dispositivo."
 USB_WAIT_ATTACH                      = "Conecta una unidad USB para continuar.\Si ya la has conectado, desconecta\y vuelve a conectarla."
 
-# QR strings - Carácteres QR
-QR_SCANNING                          = "Escaneando códigos QR..."
-QR_OPEN_WEBSITE                      = "¿Quieres abrir este enlace:\%s?"
-QR_SHOW_CONTENTS                     = "El código QR dice:\%s"
-QR_CONFIRM_INSTALL                   = "¿Quieres instalar este paquete:\%s?\Archivo: %s\Tamaño: %s"
-QR_CONFIRM_DOWNLOAD                  = "¿Quieres descargar este archivo:\%s?\Archivo: %s\Tamaño: %s"               
-
 # Adhoc strings - Carácteres Adhoc
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "Buscando una PS Vita para recibir archivos...\Por favor, espera..."
 ADHOC_SELECT_PSVITA                  = "Selecciona una PS Vita:"

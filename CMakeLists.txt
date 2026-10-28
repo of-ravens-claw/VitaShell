@@ -92,7 +92,6 @@ add_executable(VitaShell
   browser.c
   init.c
   usb.c
-  qr.c
   io_process.c
   makezip.c
   package_installer.c
@@ -165,7 +164,6 @@ target_link_libraries(VitaShell
   z
   m
   c
-  quirc
   onigmo
   archive
   zstd

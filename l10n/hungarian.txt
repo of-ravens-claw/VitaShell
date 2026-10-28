@@ -188,13 +188,6 @@ USB_NOT_CONNECTED                    = "Csatlakoztassa ezt a rendszert egy PC sz
 USB_CONNECTION_NOT_AVAILABLE         = "USB csatlakozás nem érhető el ezen az eszközön."
 USB_WAIT_ATTACH                      = "Kérlek csatolj fel egy USB cserélhető eszközt hogy folytasd.\Ha már fel volt csatolva, akkor csatold le\és csatold fel újra."
 
-# QR strings
-QR_SCANNING                         = "QR kódok keresése..."
-QR_OPEN_WEBSITE                     = "Megakarod nyitni ezt az URLt:\%s"
-QR_SHOW_CONTENTS                    = "QR Kód Mondja:\%s"
-QR_CONFIRM_INSTALL                  = "Telepíteni akarod ezt a csomagot:\%s\Fájl: %s\Méret: %s"
-QR_CONFIRM_DOWNLOAD                 = "Le akarod tölteni ezt a fájlt:\%s\Fájl: %s\Méret: %s"
-
 # Adhoc strings
 ADHOC_RECEIVE_SEARCHING_PSVITA       = "PS Vita keresése fogadásra...\Kérlek várj."
 ADHOC_SELECT_PSVITA                  = "Válassz egy PS Vitát:"
