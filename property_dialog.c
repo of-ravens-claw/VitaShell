@@ -39,7 +39,7 @@ typedef struct {
 
 static PropertyDialog property_dialog;
 
-static char property_name[256], property_type[32], property_fself_mode[16];
+static char property_name[256], property_type[32];
 static char property_size[16], property_size_new[16];
 static char property_compressed_size[16];
 static char property_contains[64], property_contains_new[64];
@@ -64,7 +64,6 @@ typedef struct {
 PropertyEntry property_entries[] = {
   { PROPERTY_NAME, PROPERTY_ENTRY_VISIBLE, property_name, sizeof(property_name) },
   { PROPERTY_TYPE, PROPERTY_ENTRY_VISIBLE, property_type, sizeof(property_type) },
-  { PROPERTY_FSELF_MODE, PROPERTY_ENTRY_VISIBLE, property_fself_mode, sizeof(property_fself_mode) },
   { PROPERTY_SIZE, PROPERTY_ENTRY_VISIBLE, property_size, sizeof(property_size) },
   // { PROPERTY_COMPRESSED_SIZE, PROPERTY_ENTRY_VISIBLE, property_compressed_size, sizeof(property_compressed_size) },
   { PROPERTY_CONTAINS, PROPERTY_ENTRY_VISIBLE, property_contains, sizeof(property_contains) },
@@ -76,7 +75,6 @@ PropertyEntry property_entries[] = {
 enum PropertyEntries {
   PROPERTY_ENTRY_NAME,
   PROPERTY_ENTRY_TYPE,
-  PROPERTY_ENTRY_FSELF_MODE,
   PROPERTY_ENTRY_SIZE,
   // PROPERTY_ENTRY_COMPRESSED_SIZE,
   PROPERTY_ENTRY_CONTAINS,
@@ -195,28 +193,6 @@ int initPropertyDialog(char *path, FileListEntry *entry) {
     size = ReadArchiveFile(path, buffer, sizeof(buffer));
   } else {
     size = ReadFile(path, buffer, sizeof(buffer));
-  }
-
-  // FSELF mode
-  if (*(uint32_t *)buffer == 0x00454353) {
-    type = PROPERTY_TYPE_FSELF;
-
-    // Check authid flag
-    uint64_t authid = *(uint64_t *)((uint32_t)buffer + 0x80);
-    if (authid == 0x2F00000000000001 || authid == 0x2F00000000000003) {      
-      width = copyStringGetWidth(property_fself_mode, language_container[PROPERTY_FSELF_MODE_UNSAFE]);
-    } else if (authid == 0x2F00000000000002) {
-      width = copyStringGetWidth(property_fself_mode, language_container[PROPERTY_FSELF_MODE_SAFE]);
-    } else {
-      width = copyStringGetWidth(property_fself_mode, language_container[PROPERTY_FSELF_MODE_SCE]);
-    }
-
-    if (width > max_width)
-      max_width = width;
-
-    property_entries[PROPERTY_ENTRY_FSELF_MODE].visibility = PROPERTY_ENTRY_VISIBLE;
-  } else {
-    property_entries[PROPERTY_ENTRY_FSELF_MODE].visibility = PROPERTY_ENTRY_INVISIBLE;
   }
 
   switch (entry->type) {
