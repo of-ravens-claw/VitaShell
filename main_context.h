@@ -31,7 +31,6 @@ void setContextMenuHomeVisibilities();
 void setContextMenuMainVisibilities();
 void setContextMenuSortVisibilities();
 void setContextMenuBookmarksVisibilities();
-void setContextMenuAdhocVisibilities();
 void setContextMenuMoreVisibilities();
 void setContextMenuNewVisibilities();
 

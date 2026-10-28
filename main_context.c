@@ -25,7 +25,6 @@
 #include "language.h"
 #include "property_dialog.h"
 #include "message_dialog.h"
-#include "netcheck_dialog.h"
 #include "ime_dialog.h"
 #include "utils.h"
 #include "pfs.h"
@@ -66,7 +65,6 @@ enum MenuMainEntrys {
   MENU_MAIN_ENTRY_NEW,
   MENU_MAIN_ENTRY_SORT_BY,
   MENU_MAIN_ENTRY_MORE,
-  MENU_MAIN_ENTRY_ADHOC,
   MENU_MAIN_ENTRY_BOOKMARKS,
 };
 
@@ -82,8 +80,7 @@ MenuEntry menu_main_entries[] = {
   { NEW,            12, CTX_FLAG_MORE, CTX_VISIBLE },
   { SORT_BY,        13, CTX_FLAG_MORE, CTX_VISIBLE },
   { MORE,           14, CTX_FLAG_MORE, CTX_INVISIBLE },
-  { ADHOC_TRANSFER, 16, CTX_FLAG_MORE, CTX_INVISIBLE },
-  { BOOKMARKS,      17, CTX_FLAG_MORE, CTX_INVISIBLE },
+  { BOOKMARKS,      16, CTX_FLAG_MORE, CTX_INVISIBLE },
 };
 
 #define N_MENU_MAIN_ENTRIES (sizeof(menu_main_entries) / sizeof(MenuEntry))
@@ -113,18 +110,6 @@ MenuEntry menu_bookmark_entries[] = {
 };
 
 #define N_MENU_BOOKMARK_ENTRIES (sizeof(menu_bookmark_entries) / sizeof(MenuEntry))
-
-enum MenuAdhocEntrys {
-  MENU_ADHOC_SEND,
-  MENU_ADHOC_RECEIVE
-};
-
-MenuEntry menu_adhoc_entries[] = {
-  { SEND,    16, 0, CTX_INVISIBLE },
-  { RECEIVE, 17, 0, CTX_INVISIBLE },
-};
-
-#define N_MENU_ADHOC_ENTRIES (sizeof(menu_adhoc_entries) / sizeof(MenuEntry))
 
 enum MenuMoreEntrys {
   MENU_MORE_ENTRY_COMPRESS,
@@ -163,7 +148,6 @@ static int contextMenuMainEnterCallback(int sel, void *context);
 static int contextMenuSortEnterCallback(int sel, void *context);
 static int contextMenuMoreEnterCallback(int sel, void *context);
 static int contextMenuBookmarksEnterCallback(int sel, void *context);
-static int contextMenuAdhocEnterCallback(int sel, void *context);
 static int contextMenuNewEnterCallback(int sel, void *context);
 
 ContextMenu context_menu_home = {
@@ -208,15 +192,6 @@ ContextMenu context_menu_bookmarks = {
   .n_entries = N_MENU_BOOKMARK_ENTRIES,
   .max_width = 0.0f,
   .callback = contextMenuBookmarksEnterCallback,
-  .sel = -1,
-};
-
-ContextMenu context_menu_adhoc = {
-  .parent = &context_menu_main,
-  .entries = menu_adhoc_entries,
-  .n_entries = N_MENU_ADHOC_ENTRIES,
-  .max_width = 0.0f,
-  .callback = contextMenuAdhocEnterCallback,
   .sel = -1,
 };
 
@@ -286,17 +261,6 @@ void initContextMenuWidth() {
 
   context_menu_bookmarks.max_width += 2.0f * CONTEXT_MENU_MARGIN;
   context_menu_bookmarks.max_width = MAX(context_menu_bookmarks.max_width, CONTEXT_MENU_MIN_WIDTH);
-
-  // adhoc
-  for (i = 0; i < N_MENU_ADHOC_ENTRIES; i++) {
-    context_menu_adhoc.max_width = MAX(context_menu_adhoc.max_width, pgf_text_width
-        (language_container[menu_adhoc_entries[i].name]));
-  }
-
-  context_menu_adhoc.max_width += 2.0f * CONTEXT_MENU_MARGIN;
-  context_menu_adhoc.max_width = MAX(context_menu_adhoc.max_width, CONTEXT_MENU_MIN_WIDTH);
-
-
 }
 
 void setContextMenuHomeVisibilities() {
@@ -452,41 +416,6 @@ void setContextMenuBookmarksVisibilities() {
   if (i == N_MENU_BOOKMARK_ENTRIES)
     context_menu_bookmarks.sel = -1;
 
-}
-void setContextMenuAdhocVisibilities() {
-  int i;
-  // All visible
-  for (i = 0; i < N_MENU_ADHOC_ENTRIES; i++) {
-    if (menu_adhoc_entries[i].visibility == CTX_INVISIBLE)
-      menu_adhoc_entries[i].visibility = CTX_VISIBLE;
-  }
-
-  FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-  if (!file_entry)
-    return;
-
-  // Invisble entries when on '..'
-  if (strcmp(file_entry->name, DIR_UP) == 0) {
-    menu_adhoc_entries[MENU_ADHOC_SEND].visibility = CTX_INVISIBLE;
-    // menu_adhoc_entries[MENU_ADHOC_RECEIVE].flags = CTX_FLAG_BARRIER;
-  }
-
-  // Invisible write operations in archives
-  // TODO: read-only mount points
-  if (isInArchive() || (pfs_mounted_path[0] && strstr(file_list.path, pfs_mounted_path) && read_only)) {
-    menu_adhoc_entries[MENU_ADHOC_SEND].visibility = CTX_INVISIBLE;
-    menu_adhoc_entries[MENU_ADHOC_RECEIVE].visibility = CTX_INVISIBLE;
-  }
-  // Go to first entry
-  for (i = 0; i < N_MENU_ADHOC_ENTRIES; i++) {
-    if (menu_adhoc_entries[i].visibility == CTX_VISIBLE) {
-      context_menu_adhoc.sel = i;
-      break;
-    }
-  }
-
-  if (i == N_MENU_ADHOC_ENTRIES)
-    context_menu_adhoc.sel = -1;
 }
 
 void setContextMenuSortVisibilities() {
@@ -1001,13 +930,6 @@ static int contextMenuMainEnterCallback(int sel, void *context) {
       setContextMenuBookmarksVisibilities();
       return CONTEXT_MENU_MORE_OPENING;
     }
-
-    case MENU_MAIN_ENTRY_ADHOC:
-    {
-      setContextMenu(&context_menu_adhoc);
-      setContextMenuAdhocVisibilities();
-      return CONTEXT_MENU_MORE_OPENING;
-    }
   }
 
   return CONTEXT_MENU_CLOSING;
@@ -1052,23 +974,6 @@ static int contextMenuBookmarksEnterCallback(int sel, void *context) {
   }
   return CONTEXT_MENU_CLOSING;
 }
-
-static int contextMenuAdhocEnterCallback(int sel, void *context) {
-  switch(sel) {
-    case MENU_ADHOC_RECEIVE: {
-      initNetCheckDialog(SCE_NETCHECK_DIALOG_MODE_PSP_ADHOC_CONN, 0);
-      setDialogStep(DIALOG_STEP_ADHOC_RECEIVE_NETCHECK);
-      break;
-    };
-    case MENU_ADHOC_SEND : {
-      initNetCheckDialog(SCE_NETCHECK_DIALOG_MODE_PSP_ADHOC_JOIN, 60 * 1000 * 1000);
-      setDialogStep(DIALOG_STEP_ADHOC_SEND_NETCHECK);
-    }
-    break;
-  }
-  return CONTEXT_MENU_CLOSING;
-}
-
 
 static int contextMenuMoreEnterCallback(int sel, void *context) {
   switch (sel) {

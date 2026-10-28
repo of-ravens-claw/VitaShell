@@ -78,7 +78,6 @@ CUT                                  = "Kivágás"
 INSERT_EMPTY_LINE                    = "Üres sor beillesztése"
 SEARCH                               = "Keresés"
 BOOKMARKS                            = "Könyvjelzők"
-ADHOC_TRANSFER                       = "Ad-hoc"
 BOOKMARKS_SHOW                       = "Könyvjelzők megjelenítése"
 BOOKMARKS_NEW                        = "Új könyvjelzők"
 BOOKMARK_CREATED                     = "Könyvjelző hozzáadva."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "Játékkártya ux0: lecsatolva."
 USB_NOT_CONNECTED                    = "Csatlakoztassa ezt a rendszert egy PC számítógéppel USB kábel használatával."
 USB_CONNECTION_NOT_AVAILABLE         = "USB csatlakozás nem érhető el ezen az eszközön."
 USB_WAIT_ATTACH                      = "Kérlek csatolj fel egy USB cserélhető eszközt hogy folytasd.\Ha már fel volt csatolva, akkor csatold le\és csatold fel újra."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "PS Vita keresése fogadásra...\Kérlek várj."
-ADHOC_SELECT_PSVITA                  = "Válassz egy PS Vitát:"
-ADHOC_RECEIVE_QUESTION               = "Akarsz fogadni %s-tól?"
-ADHOC_CLIENT_DECLINED                = "A kliens elutasította a kérésed."
 
 # Others
 UMA0_MOUNTED                         = "uma0: felcsatolva."

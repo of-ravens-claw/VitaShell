@@ -78,7 +78,6 @@ CUT                                  = "剪切"
 INSERT_EMPTY_LINE                    = "插入空行"
 SEARCH                               = "搜索"
 BOOKMARKS                            = "收藏夹"
-ADHOC_TRANSFER                       = "Ad-hoc"
 BOOKMARKS_SHOW                       = "显示收藏夹"
 BOOKMARKS_NEW                        = "新建收藏"
 BOOKMARK_CREATED                     = "已加入收藏夹."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "游戏卡 ux0: 已断开."
 USB_NOT_CONNECTED                    = "使用USB数据线将本机连接到PC."
 USB_CONNECTION_NOT_AVAILABLE         = "USB连接 在本设备上不可用."
 USB_WAIT_ATTACH                      = "请连接USB闪存驱动器以继续.\如果已连接, 请 断开\并 重新连接."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "正在搜索可接收的...\请稍候."
-ADHOC_SELECT_PSVITA                  = "选择一台 PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "你是否要从 %s 接收数据?"
-ADHOC_CLIENT_DECLINED                = "客户端已拒绝您的请求."
 
 # Others
 UMA0_MOUNTED                         = "uma0: 已挂载."

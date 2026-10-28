@@ -32,10 +32,8 @@
 #include "text.h"
 #include "hex.h"
 #include "settings.h"
-#include "adhoc_dialog.h"
 #include "property_dialog.h"
 #include "message_dialog.h"
-#include "netcheck_dialog.h"
 #include "ime_dialog.h"
 #include "theme.h"
 #include "language.h"
@@ -203,7 +201,6 @@ int dialogSteps() {
   int refresh = REFRESH_MODE_NONE;
 
   int msg_result = updateMessageDialog();
-  int netcheck_result = updateNetCheckDialog();
   int ime_result = updateImeDialog();
 
   switch (getDialogStep()) {
@@ -820,165 +817,6 @@ int dialogSteps() {
         setDialogStep(DIALOG_STEP_NONE);
       }
 
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_SEND_NETCHECK:
-    {
-      if (netcheck_result == NETCHECK_DIALOG_RESULT_CONNECTED) {
-        initAdhocDialog();
-        setDialogStep(DIALOG_STEP_NONE);
-      } else if (netcheck_result == NETCHECK_DIALOG_RESULT_NOT_CONNECTED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_SEND_WAITING:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        // Wait for a response, then close
-        if (strcmp(adhocReceiveClientReponse(), "YES") == 0 ||
-            strcmp(adhocReceiveClientReponse(), "NO") == 0) {
-          sceMsgDialogClose();
-        }
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        if (strcmp(adhocReceiveClientReponse(), "YES") == 0) {
-          SendArguments args;
-          args.file_list = &file_list;
-          args.mark_list = &mark_list;
-          args.index = base_pos + rel_pos;
-
-          initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[SENDING]);
-          setDialogStep(DIALOG_STEP_ADHOC_SENDING);
-
-          SceUID thid = sceKernelCreateThread("send_thread", (SceKernelThreadEntry)send_thread, 0x40, 0x100000, 0, 0, NULL);
-          if (thid >= 0)
-            sceKernelStartThread(thid, sizeof(SendArguments), &args);
-        } else if (strcmp(adhocReceiveClientReponse(), "NO") == 0) {
-          initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[ADHOC_CLIENT_DECLINED]);
-          setDialogStep(DIALOG_STEP_ADHOC_SEND_CLIENT_DECLINED);
-        } else {
-          // Return to select menu
-          adhocCloseSockets();
-          initAdhocDialog();
-          setDialogStep(DIALOG_STEP_NONE);
-        }
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_SEND_CLIENT_DECLINED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        // Return to select menu
-        adhocCloseSockets();
-        initAdhocDialog();
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_RECEIVE_NETCHECK:
-    {
-      if (netcheck_result == NETCHECK_DIALOG_RESULT_CONNECTED) {
-        adhocWaitingForServerRequest();
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[ADHOC_RECEIVE_SEARCHING_PSVITA]);
-        setDialogStep(DIALOG_STEP_ADHOC_RECEIVE_SEARCHING);
-      } else if (netcheck_result == NETCHECK_DIALOG_RESULT_NOT_CONNECTED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_RECEIVE_SEARCHING:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        // Wait for a request, then close
-        if (adhocReceiveServerRequest() == 1) {
-          sceMsgDialogClose();
-        }
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        // If the dialog is closed and we got a request, go to question state, otherwise end waiting
-        if (adhocReceiveServerRequest() == 1) {
-          initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[ADHOC_RECEIVE_QUESTION], adhocGetServerNickname());
-          setDialogStep(DIALOG_STEP_ADHOC_RECEIVE_QUESTION);
-        } else {
-          adhocCloseSockets();
-          sceNetCtlAdhocDisconnect();
-          setDialogStep(DIALOG_STEP_NONE);
-        }
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_RECEIVE_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        int res = adhocSendServerResponse("YES");
-        if (res < 0) {
-          adhocCloseSockets();
-          sceNetCtlAdhocDisconnect();
-          errorDialog(res);
-        } else {
-          ReceiveArguments args;
-          args.file_list = &file_list;
-          args.mark_list = &mark_list;
-          args.index = base_pos + rel_pos;
-
-          initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[RECEIVING]);
-          setDialogStep(DIALOG_STEP_ADHOC_RECEIVING);
-
-          SceUID thid = sceKernelCreateThread("receive_thread", (SceKernelThreadEntry)receive_thread, 0x40, 0x100000, 0, 0, NULL);
-          if (thid >= 0)
-            sceKernelStartThread(thid, sizeof(ReceiveArguments), &args);
-        }
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        adhocSendServerResponse("NO"); // Do not check result
-        
-        // Go back to searching
-        adhocCloseSockets();
-        adhocWaitingForServerRequest();
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL, language_container[ADHOC_RECEIVE_SEARCHING_PSVITA]);
-        setDialogStep(DIALOG_STEP_ADHOC_RECEIVE_SEARCHING);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_SENDED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        refresh = REFRESH_MODE_NORMAL;
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_RECEIVED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        refresh = REFRESH_MODE_NORMAL;
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_ADHOC_SENDING:
-    case DIALOG_STEP_ADHOC_RECEIVING:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        // Alert sockets
-        adhocAlertSockets();
-      }
-      
       break;
     }
   }

@@ -170,12 +170,6 @@ USB_NOT_CONNECTED                    = "Koble til denne enheten med USB-kabel."
 USB_CONNECTION_NOT_AVAILABLE         = "USB-tilkobling er ikke tilgjengelig på denne enheten."
 USB_WAIT_ATTACH                      = "Koble til USB-enhet for å fortsette.\Hvis den allerede er koblet til,\koble inn og ut."
 
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Leter etter PS Vita.\Vennligst vent..."
-ADHOC_SELECT_PSVITA                  = "Velg PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "Vil du motta fra %s?"
-ADHOC_CLIENT_DECLINED                = "Klienten har nektet forespørselen."
-
 # Others
 IMC0_MOUNTED                         = "imc0: montert."
 SAFE_MODE                            = "SIKKER MODUS"

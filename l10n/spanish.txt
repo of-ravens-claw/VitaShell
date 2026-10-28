@@ -78,7 +78,6 @@ CUT                                  = "Cortar"
 INSERT_EMPTY_LINE                    = "Insertar una línea"
 SEARCH                               = "Buscar"
 BOOKMARKS                            = "Marcadores"
-ADHOC_TRANSFER                       = "Transferencia Ad-hoc"
 BOOKMARKS_SHOW                       = "Mostrar marcadores"
 BOOKMARKS_NEW                        = "Nuevo marcador"
 BOOKMARK_CREATED                     = "Marcador agregado."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "gamecard ux0: desmontada."
 USB_NOT_CONNECTED                    = "Conecta este sistema a un PC usando un cable USB."
 USB_CONNECTION_NOT_AVAILABLE         = "La conexión USB no está disponible en este dispositivo."
 USB_WAIT_ATTACH                      = "Conecta una unidad USB para continuar.\Si ya la has conectado, desconecta\y vuelve a conectarla."
-
-# Adhoc strings - Carácteres Adhoc
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Buscando una PS Vita para recibir archivos...\Por favor, espera..."
-ADHOC_SELECT_PSVITA                  = "Selecciona una PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "¿Quieres recibir de %s?"
-ADHOC_CLIENT_DECLINED                = "El cliente ha rechazado su solicitud."
 
 # Others - Otros
 UMA0_MOUNTED                         = "uma0: montada."

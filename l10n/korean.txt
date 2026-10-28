@@ -78,7 +78,6 @@ CUT                                  = "잘라내기"
 INSERT_EMPTY_LINE                    = "빈 줄 삽입"
 SEARCH                               = "검색"
 BOOKMARKS                            = "북마크"
-ADHOC_TRANSFER                       = "애드혹"
 BOOKMARKS_SHOW                       = "북마크 보기"
 BOOKMARKS_NEW                        = "새 북마크"
 BOOKMARK_CREATED                     = "북마크가 생성되었습니다."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "게임 카드 ux0: 언마운트 됨."
 USB_NOT_CONNECTED                    = "USB 케이블을 PC와 연결해 주세요."
 USB_CONNECTION_NOT_AVAILABLE         = "USB 연결은 이 기기에서 지원되지 않습니다."
 USB_WAIT_ATTACH                      = "먼저 USB 플래시 드라이브를 장착한 후 진행해 주세요.\만약 이미 장착되어 있다면, 제거하신 후\다시 장착해 주세요."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "수신을 위해 PS Vita 탐색 중...\잠시 기다려 주세요."
-ADHOC_SELECT_PSVITA                  = "PS Vita 선택:"
-ADHOC_RECEIVE_QUESTION               = "%s로 부터 수신하시겠습니까?"
-ADHOC_CLIENT_DECLINED                = "요청이 거절되었습니다."
 
 # Others
 UMA0_MOUNTED                         = "uma0: 마운트 됨."

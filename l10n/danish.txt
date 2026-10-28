@@ -69,7 +69,6 @@ SEND                                 = "Send"
 RECEIVE                              = "Modtag"
 MORE                                 = "Mere"
 BOOKMARKS                            = "Bogmærke"
-ADHOC_TRANSFER                       = "Ad hoc overførsel"
 BOOKMARKS_SHOW                       = "Vis bogmærke"
 BOOKMARKS_NEW                        = "Nyt bogmærke"
 RECENT_FILES_SHOW                    = "Vis nye filer"
@@ -182,12 +181,6 @@ GAMECARD_UX0_UMOUNTED                = "GameCard ux0: afmonteret."
 USB_NOT_CONNECTED                    = "Forbind dette system til en PC ved hjælp af et USB kabel."
 USB_CONNECTION_NOT_AVAILABLE         = "USB forbindelse er ikke tilgængelig på denne enhed."
 USB_WAIT_ATTACH                      = "Indsæt et USB flash drev for at fortsætte.\Hvis det allerede er indsat, så fjern drevet\og tilslut det igen."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Søger efter PS Vita at modtage fra...\Vent venligst."
-ADHOC_SELECT_PSVITA                  = "Vælg en PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "Vil du modtage fra %s?"
-ADHOC_CLIENT_DECLINED                = "Klienten har afvist din forespørgsel."
 
 # Others
 UMA0_MOUNTED                         = "uma0: monteret."

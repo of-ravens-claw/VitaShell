@@ -170,12 +170,6 @@ USB_NOT_CONNECTED                    = "使用 USB 線將此系統跟電腦連�
 USB_CONNECTION_NOT_AVAILABLE         = "此裝置無法連接電腦。"
 USB_WAIT_ATTACH                      = "請連接 USB 裝置以繼續。\如果已經連接了，請移除\並重新連接它。"
 
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "正在搜尋可發送檔案的 PS Vita\請稍待片刻。"
-ADHOC_SELECT_PSVITA                  = "選擇 PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "是否要接受 %s 發送的檔案？"
-ADHOC_CLIENT_DECLINED                = "已拒絕用戶端請求。"
-
 # Others
 IMC0_MOUNTED                         = "imc0: 已裝載。"
 SAFE_MODE                            = "安全模式"

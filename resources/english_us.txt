@@ -78,7 +78,6 @@ CUT                                  = "Cut"
 INSERT_EMPTY_LINE                    = "Insert empty line"
 SEARCH                               = "Search"
 BOOKMARKS                            = "Bookmarks"
-ADHOC_TRANSFER                       = "Ad-hoc"
 BOOKMARKS_SHOW                       = "Show bookmarks"
 BOOKMARKS_NEW                        = "New bookmark"
 BOOKMARK_CREATED                     = "Bookmark added."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "gamecard ux0: unmounted."
 USB_NOT_CONNECTED                    = "Connect this system to a PC system using a USB cable."
 USB_CONNECTION_NOT_AVAILABLE         = "USB connection is not available on this device."
 USB_WAIT_ATTACH                      = "Please attach an USB flash drive to continue.\If it has already been attached, please detach\and reattach it."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Searching for a PS Vita to receive from...\Please wait."
-ADHOC_SELECT_PSVITA                  = "Select a PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "Do you want to receive from %s?"
-ADHOC_CLIENT_DECLINED                = "The client has declined your request."
 
 # Others
 UMA0_MOUNTED                         = "uma0: mounted."

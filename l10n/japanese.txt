@@ -170,12 +170,6 @@ USB_NOT_CONNECTED                    = "USBケーブルを使用してPCと接�
 USB_CONNECTION_NOT_AVAILABLE         = "この端末ではUSB接続が利用できません。"
 USB_WAIT_ATTACH                      = "続行するには、USBフラッシュドライブを接続してください。\すでに接続されている場合は、接続し直してください。"
 
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "ファイルを送信出来るPS Vitaを探しています\しばらくお待ちください。"
-ADHOC_SELECT_PSVITA                  = "PS Vitaを選択:"
-ADHOC_RECEIVE_QUESTION               = "%sから受信してもよろしいですか？"
-ADHOC_CLIENT_DECLINED                = "クライアントがリクエストを拒否しました。"
-
 # Others
 IMC0_MOUNTED                         = "imc0:がマウントされました。"
 SAFE_MODE                            = "SAFEモード"

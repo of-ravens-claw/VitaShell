@@ -177,12 +177,6 @@ USB_NOT_CONNECTED                    = "Connettere questo sistema a un PC utiliz
 USB_CONNECTION_NOT_AVAILABLE         = "La connessione USB non è disponibile su questo dispositivo."
 USB_WAIT_ATTACH                      = "Si prega di inserire una chiavetta USB per continuare. \ Se è già stata inserita, si prega di staccare \ e ricollegare di nuovo."
 
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Ricerca in corso di una PS Vita per la ricezione dei file... \Attendere prego."
-ADHOC_SELECT_PSVITA                  = "Seleziona una PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "Vuoi ricevere da %s?"
-ADHOC_CLIENT_DECLINED                = "Il client ha rifiutato la tua richiesta."
-
 # Others
 UMA0_MOUNTED                         = "uma0: montato."
 UMA0_UMOUNTED                        = "uma0: smontato."

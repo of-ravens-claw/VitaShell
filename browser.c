@@ -32,10 +32,8 @@
 #include "text.h"
 #include "hex.h"
 #include "settings.h"
-#include "adhoc_dialog.h"
 #include "property_dialog.h"
 #include "message_dialog.h"
-#include "netcheck_dialog.h"
 #include "ime_dialog.h"
 #include "theme.h"
 #include "language.h"
@@ -787,8 +785,6 @@ int browserMain() {
     if (getDialogStep() != DIALOG_STEP_NONE) {
       refresh = dialogSteps();
       // scroll_count = 0;
-    } else if (getAdhocDialogStatus() != ADHOC_DIALOG_CLOSED) {
-      adhocDialogCtrl();
     } else if (getPropertyDialogStatus() != PROPERTY_DIALOG_CLOSED) {
       propertyDialogCtrl();
       scroll_count = 0;
@@ -996,7 +992,6 @@ int browserMain() {
     // Draw
     drawSettingsMenu();
     drawContextMenu();
-    drawAdhocDialog();
     drawPropertyDialog();
 
     // End drawing

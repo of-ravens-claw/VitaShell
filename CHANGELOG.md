@@ -4,6 +4,7 @@
 - Remove QR scanner.
 - Remove network updater.
 - Remove taiHEN modules.
+- Remove Adhoc.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

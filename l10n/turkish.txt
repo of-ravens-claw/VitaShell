@@ -78,7 +78,6 @@ EXPORT_MEDIA                         = "İcerigi disari aktar"
 CUT                                  = "Kes"
 INSERT_EMPTY_LINE                    = "Bos satir ekle"
 SEARCH                               = "Ara"
-ADHOC_TRANSFER                       = "Ad-hoc ile transfer"
 BOOKMARKS_SHOW                       = "Yer imleri"
 BOOKMARKS_NEW                        = "Yeni yer imi"
 BOOKMARK_CREATED                     = "Yer imi olusturuldu"
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED                = "Oyun karti ux0: cikarildi."
 USB_NOT_CONNECTED                    = "USB bagli degil."
 USB_CONNECTION_NOT_AVAILABLE         = "Su an USB baglantisi saglanamiyor."
 USB_WAIT_ATTACH                      = "USB takili beklemede"
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Ad-Hoc PSVITA aramasi."
-ADHOC_SELECT_PSVITA                  = "Ad-Hoc Sec PS Vita:"
-ADHOC_RECEIVE_QUESTION               = "Ad-Hoc kabul edilsin mi %s?"
-ADHOC_CLIENT_DECLINED                = "Ad-Hoc reddedildi."
 
 # Others
 UMA0_MOUNTED                         = "uma0: takildi."

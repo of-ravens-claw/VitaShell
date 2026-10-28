@@ -278,19 +278,9 @@ static void initNet() {
   sceHttpInit(40 * 1024);
 
   sceHttpsDisableOption(SCE_HTTPS_FLAG_SERVER_VERIFY);
-
-  sceNetAdhocInit();
-
-  SceNetAdhocctlAdhocId adhocId;
-  memset(&adhocId, 0, sizeof(SceNetAdhocctlAdhocId));
-  adhocId.type = SCE_NET_ADHOCCTL_ADHOCTYPE_RESERVED;
-  memcpy(&adhocId.data[0], VITASHELL_TITLEID, SCE_NET_ADHOCCTL_ADHOCID_LEN);
-  sceNetAdhocctlInit(&adhocId);
 }
 
 static void finishNet() {
-  sceNetAdhocctlTerm();
-  sceNetAdhocTerm();
   sceSslTerm();
   sceHttpTerm();
   sceNetCtlTerm();

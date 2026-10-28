@@ -78,7 +78,6 @@ CUT									 = "Вырезать"
 INSERT_EMPTY_LINE					 = "Вставить пустую строку"
 SEARCH								 = "Поиск"
 BOOKMARKS							 = "Закладки и Недавние"
-ADHOC_TRANSFER						 = "Ad-hoc"
 BOOKMARKS_SHOW						 = "Закладки"
 BOOKMARKS_NEW						 = "Новую закладку"
 BOOKMARK_CREATED					 = "Закладка добавлена."
@@ -183,12 +182,6 @@ GAMECARD_UX0_uMOUNTED				 = "Карта с игрой размонтирован
 USB_NOT_CONNECTED					 = "Передача данных:\\Подключите PS Vita к ПК с помощью USB кабеля"
 USB_CONNECTION_NOT_AVAILABLE		 = "Ошибка:\\Невозможно активировать USB соединение на этом устройстве"
 USB_WAIT_ATTACH						 = "Подключите USB накопитель, прежде чем продолжить.\Если кабель уже вставлен, попробуйте\извлечь его и подключить повторно"
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA		 = "Поиск PSVita для получения файла\Пожалуйста, подождите"
-ADHOC_SELECT_PSVITA					 = "Выберите PSVita:"
-ADHOC_RECEIVE_QUESTION				 = "Вы хотите получить от %s?"
-ADHOC_CLIENT_DECLINED				 = "Клиент отклонил ваш запрос"
 
 # Others
 UMA0_MOUNTED						 = "uma0: смонтирован"

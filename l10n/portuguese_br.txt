@@ -69,7 +69,6 @@ SEND                                 = "Enviar"
 RECEIVE                              = "Receber"
 MORE                                 = "Mais"
 BOOKMARKS                            = "Favoritos"
-ADHOC_TRANSFER                       = "Ad-hoc"
 BOOKMARKS_SHOW                       = "Mostrar favoritos"
 BOOKMARKS_NEW                        = "Novo favorito"
 RECENT_FILES_SHOW                    = "Arquivos recentes"
@@ -182,12 +181,6 @@ GAMECARD_UX0_UMOUNTED                = "GameCard ux0: desmontado."
 USB_NOT_CONNECTED                    = "Conecte-se à um PC usando um cabo USB."
 USB_CONNECTION_NOT_AVAILABLE         = "Conexão USB não está disponível neste equipamento."
 USB_WAIT_ATTACH                      = "Por favor, conecte um Pen Drive para continuar.\Se já foi conectado, por favor, desconecte-o e\volte a conectá-lo."
-
-# Adhoc strings
-ADHOC_RECEIVE_SEARCHING_PSVITA       = "Procurando um PS Vita™ para receber dele..."
-ADHOC_SELECT_PSVITA                  = "Selecione um PS Vita™:"
-ADHOC_RECEIVE_QUESTION               = "Deseja receber de %s?"
-ADHOC_CLIENT_DECLINED                = "O cliente negou seu requerimento."
 
 # Others
 UMA0_MOUNTED                         = "uma0: montado."
