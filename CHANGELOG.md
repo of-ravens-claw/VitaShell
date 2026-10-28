@@ -12,6 +12,7 @@
 - Removed bookmarks.
 - Removed recent files.
 - Remove music player.
+- Remove media export.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

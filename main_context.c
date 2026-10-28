@@ -101,7 +101,6 @@ enum MenuMoreEntrys {
   MENU_MORE_ENTRY_COMPRESS,
   MENU_MORE_ENTRY_INSTALL_ALL,
   MENU_MORE_ENTRY_INSTALL_FOLDER,
-  MENU_MORE_ENTRY_EXPORT_MEDIA,
   MENU_MORE_ENTRY_CALCULATE_SHA1,
 };
 
@@ -109,8 +108,7 @@ MenuEntry menu_more_entries[] = {
   { COMPRESS,       14, 0, CTX_INVISIBLE },
   { INSTALL_ALL,    15, 0, CTX_INVISIBLE },
   { INSTALL_FOLDER, 16, 0, CTX_INVISIBLE },
-  { EXPORT_MEDIA,   17, 0, CTX_INVISIBLE },
-  { CALCULATE_SHA1, 18, 0, CTX_INVISIBLE },
+  { CALCULATE_SHA1, 17, 0, CTX_INVISIBLE },
 };
 
 #define N_MENU_MORE_ENTRIES (sizeof(menu_more_entries) / sizeof(MenuEntry))
@@ -397,7 +395,6 @@ void setContextMenuMoreVisibilities() {
     menu_more_entries[MENU_MORE_ENTRY_COMPRESS].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_EXPORT_MEDIA].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_CALCULATE_SHA1].visibility = CTX_INVISIBLE;
   }
 
@@ -406,7 +403,6 @@ void setContextMenuMoreVisibilities() {
     menu_more_entries[MENU_MORE_ENTRY_COMPRESS].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_EXPORT_MEDIA].visibility = CTX_INVISIBLE;
     menu_more_entries[MENU_MORE_ENTRY_CALCULATE_SHA1].visibility = CTX_INVISIBLE;
   }
 
@@ -440,13 +436,6 @@ void setContextMenuMoreVisibilities() {
 
   if(file_entry->type != FILE_TYPE_VPK) {
     menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
-  }
-
-  // Invisible export for non-media files
-  if (!file_entry->is_folder &&
-    file_entry->type != FILE_TYPE_BMP && file_entry->type != FILE_TYPE_JPEG &&
-    file_entry->type != FILE_TYPE_PNG && file_entry->type != FILE_TYPE_MP4) {
-    menu_more_entries[MENU_MORE_ENTRY_EXPORT_MEDIA].visibility = CTX_INVISIBLE;
   }
 
   // Go to first entry
@@ -950,26 +939,6 @@ static int contextMenuMoreEnterCallback(int sel, void *context) {
         snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
         initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[INSTALL_FOLDER_QUESTION]);
         setDialogStep(DIALOG_STEP_INSTALL_QUESTION);
-      }
-
-      break;
-    }
-
-    case MENU_MORE_ENTRY_EXPORT_MEDIA:
-    {
-      FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-      if (file_entry) {
-        char *message;
-
-        // On marked entry
-        if (mark_list.length > 1 && fileListFindEntry(&mark_list, file_entry->name)) {
-          message = language_container[EXPORT_FILES_FOLDERS_QUESTION];
-        } else {
-          message = language_container[file_entry->is_folder ? EXPORT_FOLDER_QUESTION : EXPORT_FILE_QUESTION];
-        }
-
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, message);
-        setDialogStep(DIALOG_STEP_EXPORT_QUESTION);
       }
 
       break;

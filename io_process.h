@@ -49,12 +49,6 @@ typedef struct {
 } CopyArguments;
 
 typedef struct {
-  FileList *file_list;
-  FileList *mark_list;
-  int index;
-} ExportArguments;
-
-typedef struct {
   char *file_path;
 } HashArguments;
 
@@ -64,7 +58,6 @@ SceUID createStartUpdateThread(uint64_t max, int show_kbs);
 
 int delete_thread(SceSize args_size, DeleteArguments *args);
 int copy_thread(SceSize args_size, CopyArguments *args);
-int export_thread(SceSize args_size, ExportArguments *args);
 int hash_thread(SceSize args_size, HashArguments *args);
 
 #endif

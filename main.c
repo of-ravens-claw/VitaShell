@@ -452,36 +452,6 @@ int dialogSteps() {
       break;
     }
     
-    case DIALOG_STEP_EXPORT_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[EXPORTING]);
-        setDialogStep(DIALOG_STEP_EXPORT_CONFIRMED);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_EXPORT_CONFIRMED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        ExportArguments args;
-        args.file_list = &file_list;
-        args.mark_list = &mark_list;
-        args.index = base_pos + rel_pos;
-
-        setDialogStep(DIALOG_STEP_EXPORTING);
-
-        SceUID thid = sceKernelCreateThread("export_thread", (SceKernelThreadEntry)export_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, sizeof(ExportArguments), &args);
-      }
-
-      break;
-    }
-    
     case DIALOG_STEP_RENAME:
     {
       if (ime_result == IME_DIALOG_RESULT_FINISHED) {

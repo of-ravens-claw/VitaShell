@@ -120,7 +120,6 @@ target_link_libraries(VitaShell
   expat
   SceAppMgr_stub
   SceAppUtil_stub
-  SceCamera_stub
   SceCommonDialog_stub
   SceCtrl_stub
   SceDisplay_stub
@@ -129,8 +128,6 @@ target_link_libraries(VitaShell
   SceIme_stub
   SceHttp_stub
   SceLibKernel_stub
-  SceMtpIfDriver_stub
-  SceMusicExport_stub
   SceNet_stub
   SceNetCtl_stub
   SceNpDrm_stub
@@ -140,13 +137,9 @@ target_link_libraries(VitaShell
   SceSsl_stub
   SceSysmodule_stub
   ScePgf_stub
-  ScePhotoExport_stub
   ScePower_stub
   ScePromoterUtil_stub
   SceTouch_stub
-  SceUdcd_stub
-  SceUsbstorVStorDriver_stub
-  SceVideoExport_stub
   SceVshBridge_stub
 )
 
