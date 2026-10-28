@@ -126,7 +126,6 @@ target_link_libraries(VitaShell
   SceFios2_stub
   SceGxm_stub
   SceIme_stub
-  SceHttp_stub
   SceLibKernel_stub
   SceNet_stub
   SceNetCtl_stub
@@ -134,12 +133,10 @@ target_link_libraries(VitaShell
   SceRegistryMgr_stub
   SceShellSvc_stub
   SceSqlite_stub
-  SceSsl_stub
   SceSysmodule_stub
   ScePgf_stub
   ScePower_stub
   ScePromoterUtil_stub
-  SceTouch_stub
   SceVshBridge_stub
 )
 

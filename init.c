@@ -150,16 +150,9 @@ static void initNet() {
 
   sceNetInit(&param);
   sceNetCtlInit();
-
-  sceSslInit(300 * 1024);
-  sceHttpInit(40 * 1024);
-
-  sceHttpsDisableOption(SCE_HTTPS_FLAG_SERVER_VERIFY);
 }
 
 static void finishNet() {
-  sceSslTerm();
-  sceHttpTerm();
   sceNetCtlTerm();
   sceNetTerm();
   free(net_memory);
@@ -188,12 +181,8 @@ void initVitaShell() {
   sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 
   // Load modules
-  sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
   sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
-  sceSysmoduleLoadModule(SCE_SYSMODULE_MUSIC_EXPORT);
-  sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
   sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
-  sceSysmoduleLoadModule(SCE_SYSMODULE_HTTPS);
   sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
 
   // Init
@@ -215,10 +204,6 @@ void finishVitaShell() {
   
   // Unload modules
   sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
-  sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTPS);
   sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
-  sceSysmoduleUnloadModule(SCE_SYSMODULE_PHOTO_EXPORT);
-  sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
   sceSysmoduleUnloadModule(SCE_SYSMODULE_PGF);
-  sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
 }
