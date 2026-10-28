@@ -34,14 +34,14 @@ int module_start(SceSize args, void *argp) {
   switch (info.module_nid) {
     case 0xF1102066: // 3.30
     case 0xA1BE0ED6: // 3.35
-		case 0x6ABD8ABA: // 3.36
+    case 0x6ABD8ABA: // 3.36
       hooks[0] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xE4E6, &nop_nop_opcode, 4);
       hooks[1] = taiInjectDataForKernel(KERNEL_PID, info.modid, 0, 0xE516, &nop_nop_opcode, 2);
       break;
 
     case 0xE2EDFCC3: // 3.50
     case 0x8C76997D: // 3.51
-		case 0x1D32C3FF: // 3.52
+    case 0x1D32C3FF: // 3.52
     case 0x94CEFE4B: // 3.55
     case 0xDFBC288C: // 3.57
     case 0xDBB29DB7: // 3.60
