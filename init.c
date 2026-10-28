@@ -376,11 +376,6 @@ void initVitaShell() {
   // Init power tick thread
   initPowerTickThread();
 
-  // Delete VitaShell updater if available
-  if (checkAppExist("VSUPDATER")) {
-    deleteApp("VSUPDATER");
-  }
-
   // Install default files
   installDefaultFiles();
 

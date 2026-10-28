@@ -24,8 +24,6 @@
 #include "refresh.h"
 #include "makezip.h"
 #include "package_installer.h"
-#include "network_update.h"
-#include "network_download.h"
 #include "context_menu.h"
 #include "archive.h"
 #include "photo.h"
@@ -849,31 +847,6 @@ int dialogSteps() {
       break;
     }
     
-    case DIALOG_STEP_UPDATE_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[DOWNLOADING]);
-        setDialogStep(DIALOG_STEP_DOWNLOADING);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-    }
-    
-    case DIALOG_STEP_DOWNLOADED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[INSTALLING]);
-
-        setDialogStep(DIALOG_STEP_EXTRACTING);
-
-        SceUID thid = sceKernelCreateThread("update_extract_thread", (SceKernelThreadEntry)update_extract_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, 0, NULL);
-      }
-
-      break;
-    }
-    
     case DIALOG_STEP_SETTINGS_AGREEMENT:
     {
       if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
@@ -903,14 +876,6 @@ int dialogSteps() {
         setDialogStep(DIALOG_STEP_NONE);
       }
       
-      break;
-    }
-    
-    case DIALOG_STEP_EXTRACTED:
-    {
-			removePath("ux0:patch/VITASHELL", NULL);
-      launchAppByUriExit("VSUPDATER");
-      setDialogStep(DIALOG_STEP_NONE);
       break;
     }
     
@@ -1145,13 +1110,6 @@ int main(int argc, const char *argv[]) {
   // Init context menu width
   initContextMenuWidth();
   initTextContextMenuWidth();
-  
-  // Automatic network update
-  if (!vitashell_config.disable_autoupdate) {
-    SceUID thid = sceKernelCreateThread("network_update_thread", network_update_thread, 0x10000100, 0x100000, 0, 0, NULL);
-    if (thid >= 0)
-      sceKernelStartThread(thid, 0, NULL);
-  }
 
   // File browser
   browserMain();

@@ -96,8 +96,6 @@ add_executable(VitaShell
   makezip.c
   package_installer.c
   refresh.c
-  network_update.c
-  network_download.c
   context_menu.c
   archive.c
   psarc.c
