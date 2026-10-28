@@ -24,7 +24,6 @@
 #include "package_installer.h"
 #include "context_menu.h"
 #include "archive.h"
-#include "photo.h"
 #include "file.h"
 #include "text.h"
 #include "hex.h"
@@ -166,7 +165,7 @@ void drawShellInfo(const char *path) {
   // home (SAFE/UNSAFE MODE)
   if (strcmp(path_first_line, HOME_PATH) == 0) {    
     pgf_draw_textf(SHELL_MARGIN_X, PATH_Y, PATH_COLOR, "%s (%s)", HOME_PATH,
-                   isSafeMode() ? language_container[SAFE_MODE] : language_container[UNSAFE_MODE]);
+                   is_safe_mode ? language_container[SAFE_MODE] : language_container[UNSAFE_MODE]);
   } else {
     // Path
     pgf_draw_text(SHELL_MARGIN_X, PATH_Y, PATH_COLOR, path_first_line);
@@ -180,7 +179,7 @@ void initFtp() {
   for (i = 0; i < getNumberOfDevices(); i++) {
     char **devices = getDevices();
     if (devices[i]) {
-      if (isSafeMode() && strcmp(devices[i], "ux0:") != 0)
+      if (is_safe_mode && strcmp(devices[i], "ux0:") != 0)
         continue;
 
       ftpvita_add_device(devices[i]);

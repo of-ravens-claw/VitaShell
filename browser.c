@@ -24,7 +24,6 @@
 #include "package_installer.h"
 #include "context_menu.h"
 #include "archive.h"
-#include "photo.h"
 #include "file.h"
 #include "text.h"
 #include "hex.h"
@@ -359,12 +358,6 @@ static int handleFile(const char *file, FileListEntry *entry) {
       res = textViewer(file);
       break;
       
-    case FILE_TYPE_BMP:
-    case FILE_TYPE_PNG:
-    case FILE_TYPE_JPEG:
-      res = photoViewer(file, type, &file_list, entry, &base_pos, &rel_pos);
-      break;
-
     case FILE_TYPE_SFO:
       res = SFOReader(file);
       break;
@@ -742,13 +735,6 @@ int browserMain() {
           icon = folder_icon;
         } else {
           switch (file_entry->type) {
-            case FILE_TYPE_BMP:
-            case FILE_TYPE_PNG:
-            case FILE_TYPE_JPEG:
-              color = IMAGE_COLOR;
-              icon = image_icon;
-              break;
-              
             case FILE_TYPE_VPK:
             case FILE_TYPE_ARCHIVE:
               color = ARCHIVE_COLOR;

@@ -220,20 +220,8 @@ int initPropertyDialog(char *path, FileListEntry *entry) {
   }
 
   switch (entry->type) {
-    case FILE_TYPE_BMP:
-      type = PROPERTY_TYPE_BMP;
-      break;
-      
     case FILE_TYPE_INI:
       type = PROPERTY_TYPE_INI;
-      break;
-      
-    case FILE_TYPE_JPEG:
-      type = PROPERTY_TYPE_JPEG;
-      break;
-      
-    case FILE_TYPE_PNG:
-      type = PROPERTY_TYPE_PNG;
       break;
       
     case FILE_TYPE_SFO:

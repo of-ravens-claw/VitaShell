@@ -20,6 +20,7 @@
 - Remove .zip creation.
 - Remove file SHA1 calculation.
 - Remove 'more' context menu.
+- Remove photo viewer.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

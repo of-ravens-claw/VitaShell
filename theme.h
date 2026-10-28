@@ -84,11 +84,10 @@ extern int AUDIO_TIME_TOTAL;
 extern int AUDIO_TIME_BAR;
 extern int AUDIO_TIME_BAR_BG;
 
-extern vita2d_texture *folder_icon, *file_icon, *archive_icon, *image_icon, *sfo_icon, *text_icon,
+extern vita2d_texture *folder_icon, *file_icon, *archive_icon, *sfo_icon, *text_icon,
             *ftp_image, *dialog_image, *context_image, *context_more_image, *settings_image, *battery_image,
             *battery_bar_red_image, *battery_bar_green_image, *battery_bar_charge_image,
-            *play_image, *pause_image,
-    *fastforward_image, *fastrewind_image, *folder_symlink_icon, *file_symlink_icon;
+    *folder_symlink_icon, *file_symlink_icon;
 
 void loadTheme();
 

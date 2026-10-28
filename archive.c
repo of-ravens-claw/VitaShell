@@ -33,10 +33,6 @@ int checkForUnsafeImports(const Elf32_Ehdr *ehdr, const Elf32_Phdr *phdr, void *
 char *uncompressBuffer(const Elf32_Ehdr *ehdr, const Elf32_Phdr *phdr, const segment_info *segment,
                        const char *buffer);
 
-void waitpid() {}
-void __archive_create_child() {}
-void __archive_check_child() {}
-
 struct archive_data {
   char *filename;
   SceUID fd;

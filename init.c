@@ -30,10 +30,6 @@ int is_safe_mode = 0;
 // System params
 int language = 0, enter_button = 0, date_format = 0, time_format = 0;
 
-int isSafeMode() {
-  return is_safe_mode;
-}
-
 static void initSceAppUtil() {
   // Init SceAppUtil
   SceAppUtilInitParam init_param;
@@ -41,10 +37,6 @@ static void initSceAppUtil() {
   memset(&init_param, 0, sizeof(SceAppUtilInitParam));
   memset(&boot_param, 0, sizeof(SceAppUtilBootParam));
   sceAppUtilInit(&init_param, &boot_param);
-
-  // Mount
-  sceAppUtilMusicMount();
-  sceAppUtilPhotoMount();
 
   // System params
   sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
@@ -61,10 +53,6 @@ static void initSceAppUtil() {
 }
 
 static void finishSceAppUtil() {
-  // Unmount
-  sceAppUtilPhotoUmount();
-  sceAppUtilMusicUmount();
-
   // Shutdown AppUtil
   sceAppUtilShutdown();
 }

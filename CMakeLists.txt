@@ -78,7 +78,6 @@ add_executable(VitaShell
   package_installer.c
   context_menu.c
   archive.c
-  photo.c
   file.c
   text.c
   hex.c
@@ -105,10 +104,8 @@ target_link_libraries(VitaShell
   ftpvita
   vita2d
   png
-  jpeg
   z
   m
-  c
   archive
   zstd
   bz2
@@ -119,11 +116,8 @@ target_link_libraries(VitaShell
   SceDisplay_stub
   SceGxm_stub
   SceIme_stub
-  SceLibKernel_stub
   SceNet_stub
   SceNetCtl_stub
-  SceNpDrm_stub
-  SceRegistryMgr_stub
   SceShellSvc_stub
   SceSysmodule_stub
   ScePgf_stub
