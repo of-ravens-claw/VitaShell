@@ -41,7 +41,7 @@
 - Fixed compatibility with `udcd_uvc.skprx ` thanks to xerpi.
 
 ### Changelog 1.94
-- Added ability to umount all partitions that you can mount.
+- Added ability to unmount all partitions that you can mount.
 - Fixed crash when using StorageMgr.
 
 ### Changelog 1.93

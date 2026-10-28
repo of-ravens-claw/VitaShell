@@ -918,7 +918,7 @@ static int contextMenuMainEnterCallback(int sel, void *context) {
     {
       FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
       if (file_entry) {
-        // Umount if last path copied from is the pfs mounted path
+        // Unmount if last path copied from is the pfs mounted path
         if (pfs_mounted_path[0] &&
             !strstr(file_list.path, pfs_mounted_path) &&
              strstr(copy_list.path, pfs_mounted_path)) {

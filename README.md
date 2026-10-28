@@ -13,7 +13,7 @@ See [CHANGELOG.md](CHANGELOG.md)
 - Once `uma0:` is listed under the partitions, press `▲` again and choose `Mount USB ux0:`. This will copy important apps like VitaShell, molecularShell, and other files.
 - Your USB flash drive is now acting as a Memory Card.
 - To sync all your apps on your USB flash drive, press `▲` and choose `Refresh livearea`. This will NOT refresh PSP games.
-- If you wish to revert the patch, press `▲` and select `Umount USB ux0:`.
+- If you wish to revert the patch, press `▲` and select `Unmount USB ux0:`.
 - Note that this patch is only temporary and you need to redo the procedure everytime you launch your PS TV.
 
 ## Customization

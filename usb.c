@@ -104,7 +104,7 @@ int mountUsbUx0() {
   // Redirect ux0: to uma0:
   shellUserRedirectUx0("sdstor0:uma-pp-act-a", "sdstor0:uma-lp-act-entire");
 
-  // Umount uma0:
+  // Unmount uma0:
   vshIoUmount(0xF00, 0, 0, 0);
 
   // Remount Memory Card

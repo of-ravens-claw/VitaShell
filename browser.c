@@ -835,7 +835,7 @@ int browserMain() {
     // Refresh on app resume
     if (event.systemEvent == SCE_APPMGR_SYSTEMEVENT_ON_RESUME) {
       sceShellUtilLock(SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION);
-      pfsUmount(); // umount game data at resume
+      pfsUmount(); // unmount game data at resume
       refresh = REFRESH_MODE_NORMAL;
     }
     if (refresh != REFRESH_MODE_NONE) {

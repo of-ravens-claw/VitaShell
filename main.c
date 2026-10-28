@@ -344,7 +344,7 @@ int dialogSteps() {
         if (getDialogStep() == DIALOG_STEP_MOVED)
           fileListEmpty(&copy_list);
         
-        // Umount and remove from clipboard after pasting
+        // Unmount and remove from clipboard after pasting
         if (pfs_mounted_path[0] &&
             !strstr(file_list.path, pfs_mounted_path) &&
              strstr(copy_list.path, pfs_mounted_path)) {
