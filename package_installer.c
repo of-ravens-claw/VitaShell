@@ -32,27 +32,32 @@ INCLUDE_EXTERN_RESOURCE(head_bin);
 static int loadScePaf() {
   static uint32_t argp[] =
   {
-    0x00400000,
-    0x0000EA60,
-    0x00040000,
-    0x00000000,
-    0x00000001,
-    0x00000000
+    SCE_KERNEL_4MiB, // global_heap_size
+    0, // reserved[0]
+    0, // reserved[1]
+    0, // cdlg_mode
+    0, // global_heap_alignment
+    0, // global_heap_disable_assert_on_alloc_failure
   };
 
   int result = -1;
 
   SceSysmoduleOpt buf;
-  buf.flags  = 0;
-  buf.result = &result;
+  buf.flags     = 0;
+  buf.result    = &result;
   buf.unused[0] = -1;
   buf.unused[1] = -1;
-
   return sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, &buf);
 }
 
 static int unloadScePaf() {
-  SceSysmoduleOpt buf = { 0, 0, {0, 0} };
+  int result = -1;
+
+  SceSysmoduleOpt buf;
+  buf.flags     = 0;
+  buf.result    = &result;
+  buf.unused[0] = -1;
+  buf.unused[1] = -1;
   return sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &buf);
 }
 
