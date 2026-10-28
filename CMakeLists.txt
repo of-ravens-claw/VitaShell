@@ -77,7 +77,6 @@ add_executable(VitaShell
   io_process.c
   makezip.c
   package_installer.c
-  refresh.c
   context_menu.c
   archive.c
   psarc.c
@@ -86,8 +85,6 @@ add_executable(VitaShell
   text.c
   hex.c
   sfo.c
-  rif.c
-  sqlite3.c
   coredump.c
   settings.c
   property_dialog.c
@@ -132,7 +129,6 @@ target_link_libraries(VitaShell
   SceNpDrm_stub
   SceRegistryMgr_stub
   SceShellSvc_stub
-  SceSqlite_stub
   SceSysmodule_stub
   ScePgf_stub
   ScePower_stub

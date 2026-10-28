@@ -21,7 +21,6 @@
 #include "browser.h"
 #include "init.h"
 #include "io_process.h"
-#include "refresh.h"
 #include "makezip.h"
 #include "package_installer.h"
 #include "context_menu.h"
@@ -301,38 +300,6 @@ int dialogSteps() {
       break;
     }
     
-    case DIALOG_STEP_REFRESH_LIVEAREA_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[REFRESHING]);
-        setDialogStep(DIALOG_STEP_REFRESHING);
-
-        SceUID thid = sceKernelCreateThread("refresh_thread", (SceKernelThreadEntry)refresh_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, 0, NULL);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_REFRESH_LICENSE_DB_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[REFRESHING]);
-        setDialogStep(DIALOG_STEP_REFRESHING);
-
-        SceUID thid = sceKernelCreateThread("license_thread", (SceKernelThreadEntry)license_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, 0, NULL);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-
     case DIALOG_STEP_USB_ATTACH_WAIT:
     {
       if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {

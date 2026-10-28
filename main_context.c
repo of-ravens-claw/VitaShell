@@ -30,8 +30,6 @@
 #include "pfs.h"
 
 enum MenuHomeEntrys {
-  MENU_HOME_ENTRY_REFRESH_LIVEAREA,
-  MENU_HOME_ENTRY_REFRESH_LICENSE_DB,
   MENU_HOME_ENTRY_MOUNT_UMA0,
   MENU_HOME_ENTRY_MOUNT_IMC0,
   MENU_HOME_ENTRY_MOUNT_XMC0,
@@ -41,8 +39,6 @@ enum MenuHomeEntrys {
 };
 
 MenuEntry menu_home_entries[] = {
-  { REFRESH_LIVEAREA,     0, 0, CTX_INVISIBLE },
-  { REFRESH_LICENSE_DB,   1, 0, CTX_INVISIBLE },
   { MOUNT_UMA0,           3, 0, CTX_INVISIBLE },
   { MOUNT_IMC0,           4, 0, CTX_INVISIBLE },
   { MOUNT_XMC0,           5, 0, CTX_INVISIBLE },
@@ -477,30 +473,6 @@ void setContextMenuNewVisibilities() {
 
 static int contextMenuHomeEnterCallback(int sel, void *context) {
   switch (sel) {
-    case MENU_HOME_ENTRY_REFRESH_LIVEAREA:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[REFRESH_LIVEAREA_QUESTION]);
-        setDialogStep(DIALOG_STEP_REFRESH_LIVEAREA_QUESTION);
-      }
-
-      break;
-    }
-
-    case MENU_HOME_ENTRY_REFRESH_LICENSE_DB:
-    {
-      if (is_safe_mode) {
-        infoDialog(language_container[EXTENDED_PERMISSIONS_REQUIRED]);
-      } else {
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[REFRESH_LICENSE_DB_QUESTION]);
-        setDialogStep(DIALOG_STEP_REFRESH_LICENSE_DB_QUESTION);
-      }
-
-      break;
-    }
-
     case MENU_HOME_ENTRY_MOUNT_UMA0:
     {
       if (is_safe_mode) {

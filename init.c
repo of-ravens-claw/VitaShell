@@ -22,7 +22,6 @@
 #include "file.h"
 #include "package_installer.h"
 #include "utils.h"
-#include "rif.h"
 
 char vitashell_titleid[12];
 
@@ -128,14 +127,6 @@ static void finishVita2dLib() {
   font = NULL;
 }
 
-static int initSQLite() {
-  return sqlite_init();
-}
-
-static int finishSQLite() {
-  return sqlite_exit();
-}
-
 #define NET_MEMORY_SIZE (4 * 1024 * 1024)
 
 static char *net_memory = NULL;
@@ -183,13 +174,11 @@ void initVitaShell() {
   // Load modules
   sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
   sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
-  sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
 
   // Init
   initVita2dLib();
   initSceAppUtil();
   initNet();
-  initSQLite();
 
   // Init power tick thread
   initPowerTickThread();
@@ -197,13 +186,11 @@ void initVitaShell() {
 
 void finishVitaShell() {
   // Finish
-  finishSQLite();
   finishNet();
   finishSceAppUtil();
   finishVita2dLib();
   
   // Unload modules
-  sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
   sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
   sceSysmoduleUnloadModule(SCE_SYSMODULE_PGF);
 }
