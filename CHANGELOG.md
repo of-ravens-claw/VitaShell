@@ -16,6 +16,7 @@
 - Remove livearea refresh.
 - Remove 'home' context menu.
 - Remove mounting uma0, xmc0, imc0.
+- Remove .psarc support.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

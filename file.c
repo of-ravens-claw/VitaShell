@@ -619,7 +619,6 @@ static ExtensionType extension_types[] = {
   { ".MP4",      FILE_TYPE_MP4 },
   { ".MTREE",    FILE_TYPE_ARCHIVE },
   { ".PNG",      FILE_TYPE_PNG },
-  { ".PSARC",    FILE_TYPE_ARCHIVE },
   { ".PSP2ARC",  FILE_TYPE_ARCHIVE },
   { ".PSP2DMP",  FILE_TYPE_PSP2DMP },
   { ".RAR",      FILE_TYPE_ARCHIVE },

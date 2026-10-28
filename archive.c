@@ -19,12 +19,10 @@
 #include "main.h"
 #include "browser.h"
 #include "archive.h"
-#include "psarc.h"
 #include "file.h"
 #include "utils.h"
 #include "elf.h"
 
-static int is_psarc = 0;
 static char archive_file[MAX_PATH_LENGTH];
 static int archive_path_start = 0;
 struct archive *archive_fd = NULL;
@@ -504,9 +502,6 @@ int archiveCheckFilesForUnsafeFself() {
 }
 
 int fileListGetArchiveEntries(FileList *list, const char *path, int sort) {
-  if (is_psarc)
-    return fileListGetPsarcEntries(list, path, sort);
-  
   int res;
 
   if (!list)
@@ -565,9 +560,6 @@ int fileListGetArchiveEntries(FileList *list, const char *path, int sort) {
 
 int getArchivePathInfo(const char *path, uint64_t *size, uint32_t *folders,
                        uint32_t *files, int (* handler)(const char *path)) {
-  if (is_psarc)
-    return getPsarcPathInfo(path, size, folders, files, handler);
-  
   SceIoStat stat;
   memset(&stat, 0, sizeof(SceIoStat));
 
@@ -635,7 +627,6 @@ int extractArchiveFile(const char *src_path, const char *dst_path, FileProcessPa
 
   SceUID fddst = sceIoOpen(dst_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
   if (fddst < 0) {
-    psarcFileClose(fdsrc);
     return fddst;
   }
 
@@ -700,9 +691,6 @@ int extractArchiveFile(const char *src_path, const char *dst_path, FileProcessPa
 }
 
 int extractArchivePath(const char *src_path, const char *dst_path, FileProcessParam *param) {
-  if (is_psarc)
-    return extractPsarcPath(src_path, dst_path, param);
-  
   SceIoStat stat;
   memset(&stat, 0, sizeof(SceIoStat));
 
@@ -770,9 +758,6 @@ int extractArchivePath(const char *src_path, const char *dst_path, FileProcessPa
 }
 
 int archiveFileGetstat(const char *file, SceIoStat *stat) {
-  if (is_psarc)
-    return psarcFileGetstat(file, stat);
-    
   ArchiveFileNode *node = findArchiveNode(file + archive_path_start);
   if (!node)
     return VITASHELL_ERROR_ILLEGAL_ADDR;
@@ -784,9 +769,6 @@ int archiveFileGetstat(const char *file, SceIoStat *stat) {
 }
 
 int archiveFileOpen(const char *file, int flags, SceMode mode) {
-  if (is_psarc)
-    return psarcFileOpen(file, flags, mode);
-    
   // A file is already open
   if (archive_fd)
     return -1;
@@ -822,9 +804,6 @@ int archiveFileOpen(const char *file, int flags, SceMode mode) {
 }
 
 int archiveFileRead(SceUID fd, void *data, SceSize size) {
-  if (is_psarc)
-    return psarcFileRead(fd, data, size);
-  
   if (!archive_fd || fd != ARCHIVE_FD)
     return -1;
 
@@ -832,9 +811,6 @@ int archiveFileRead(SceUID fd, void *data, SceSize size) {
 }
 
 int archiveFileClose(SceUID fd) {
-  if (is_psarc)
-    return psarcFileClose(fd);
-  
   if (!archive_fd || fd != ARCHIVE_FD)
     return -1;
 
@@ -868,9 +844,6 @@ void archiveSetPassword(char *string) {
 }
 
 int archiveClose() {
-  if (is_psarc)
-    return psarcClose();
-  
   freeArchiveNodes(archive_root);
   return 0;
 }
@@ -890,13 +863,6 @@ int archiveOpen(const char *file) {
   int read = ReadFile(file, &magic, sizeof(uint32_t));
   if (read < 0)
     return read;
-  
-  // PSARC file
-  is_psarc = 0;
-  if (magic == 0x52415350) {
-    is_psarc = 1;
-    return psarcOpen(file);
-  }
   
   // Start position of the archive path
   archive_path_start = strlen(file) + 1;

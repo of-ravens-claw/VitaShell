@@ -79,7 +79,6 @@ add_executable(VitaShell
   package_installer.c
   context_menu.c
   archive.c
-  psarc.c
   photo.c
   file.c
   text.c
@@ -119,7 +118,6 @@ target_link_libraries(VitaShell
   SceCommonDialog_stub
   SceCtrl_stub
   SceDisplay_stub
-  SceFios2_stub
   SceGxm_stub
   SceIme_stub
   SceLibKernel_stub
