@@ -104,16 +104,6 @@ add_executable(VitaShell
   minizip/ioapi.c
   bm.c
   strnatcmp.c
-  libmad/bit.c
-  libmad/decoder.c
-  libmad/fixed.c
-  libmad/frame.c
-  libmad/huffman.c
-  libmad/layer12.c
-  libmad/layer3.c
-  libmad/stream.c
-  libmad/synth.c
-  libmad/timer.c
 )
 
 target_link_libraries(VitaShell
