@@ -35,11 +35,6 @@ extern int sort_mode, copy_mode;
 
 extern int last_set_sort_mode;
 
-// minimum time to pass before shortcutting to recent files/ bookmarks via L/R keys
-extern SceInt64 time_last_recent_files, time_last_bookmarks;
-#define THRESHOLD_LAST_PAD_RECENT_FILES_WAIT 1000000
-#define THRESHOLD_LAST_PAD_BOOKMARKS_WAIT 1000000
-
 void dirLevelUp();
 
 void setDirArchiveLevel();

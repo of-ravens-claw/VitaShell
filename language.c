@@ -22,28 +22,6 @@
 
 INCLUDE_EXTERN_RESOURCE(english_us_txt);
 
-static char *lang[] = {
-  "japanese",
-  "english_us",
-  "french",
-  "spanish",
-  "german",
-  "italian",
-  "dutch",
-  "portuguese",
-  "russian",
-  "korean",
-  "chinese_t",
-  "chinese_s",
-  "finnish",
-  "swedish",
-  "danish",
-  "norwegian",
-  "polish",
-  "portuguese_br",
-  "turkish"
-};
-
 char *language_container[LANGUAGE_CONTAINER_SIZE];
 
 void freeLanguageContainer() {
@@ -128,10 +106,6 @@ void loadLanguage(int id) {
     LANGUAGE_ENTRY(SEND),
     LANGUAGE_ENTRY(RECEIVE),
     LANGUAGE_ENTRY(MORE),
-    LANGUAGE_ENTRY(BOOKMARKS),
-    LANGUAGE_ENTRY(BOOKMARKS_SHOW),
-    LANGUAGE_ENTRY(BOOKMARKS_NEW),
-    LANGUAGE_ENTRY(RECENT_FILES_SHOW),
     LANGUAGE_ENTRY(COMPRESS),
     LANGUAGE_ENTRY(INSTALL_ALL),
     LANGUAGE_ENTRY(INSTALL_FOLDER),
@@ -216,21 +190,12 @@ void loadLanguage(int id) {
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_MAIN),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_LANGUAGE),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_THEME),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_USBDEVICE),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_SELECT_BUTTON),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_NO_AUTO_UPDATE),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_WARNING_MESSAGE),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_RESTART_SHELL),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_POWER),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_REBOOT),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_POWEROFF),
     LANGUAGE_ENTRY(VITASHELL_SETTINGS_STANDBY),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_USB_MEMORY_CARD),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_USB_GAME_CARD),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_USB_SD2VITA),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_USB_PSVSD),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_SELECT_BUTTON_USB),
-    LANGUAGE_ENTRY(VITASHELL_SETTINGS_SELECT_BUTTON_FTP),
 
     // USB strings
     LANGUAGE_ENTRY(USB_CONNECTED),
@@ -263,19 +228,9 @@ void loadLanguage(int id) {
     LANGUAGE_ENTRY(ARCHIVE_NAME),
     LANGUAGE_ENTRY(COMPRESSION_LEVEL),
     LANGUAGE_ENTRY(ENTER_PASSWORD),
-    LANGUAGE_ENTRY(BOOKMARK_CREATED)
   };
 
   // Load default config file
   readConfigBuffer(&_binary_resources_english_us_txt_start, (int)&_binary_resources_english_us_txt_size,
                    language_entries, sizeof(language_entries) / sizeof(ConfigEntry));
-
-  // Load custom config file
-  if (use_custom_config) {
-    if (id >= 0 && id < (sizeof(lang) / sizeof(char *))) {
-      char path[MAX_PATH_LENGTH];
-      snprintf(path, MAX_PATH_LENGTH, "ux0:VitaShell/language/%s.txt", lang[id]);
-      readConfig(path, language_entries, sizeof(language_entries) / sizeof(ConfigEntry));
-    }
-  }
 }

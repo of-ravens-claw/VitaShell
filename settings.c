@@ -39,35 +39,7 @@ static char spoofed_version[6];
 static SettingsMenuEntry *settings_menu_entries = NULL;
 static int n_settings_entries = 0;
 
-static char *usbdevice_options[4];
-static char *select_button_options[2];
-
-static char **theme_options = NULL;
-static int theme_count = 0;
-static char *theme_name = NULL;
-
-static ConfigEntry settings_entries[] = {
-  { "USBDEVICE",          CONFIG_TYPE_DECIMAL, (int *)&vitashell_config.usbdevice },
-  { "SELECT_BUTTON",      CONFIG_TYPE_DECIMAL, (int *)&vitashell_config.select_button },
-  { "DISABLE_AUTOUPDATE", CONFIG_TYPE_BOOLEAN, (int *)&vitashell_config.disable_autoupdate },
-  { "DISABLE_WARNING",    CONFIG_TYPE_BOOLEAN, (int *)&vitashell_config.disable_warning },
-};
-
-static ConfigEntry theme_entries[] = {
-  { "THEME_NAME", CONFIG_TYPE_STRING, (void *)&theme_name },
-};
-
 SettingsMenuOption main_settings[] = {
-  // { VITASHELL_SETTINGS_LANGUAGE,     SETTINGS_OPTION_TYPE_BOOLEAN, NULL, NULL, 0, NULL, 0, &language },
-  { VITASHELL_SETTINGS_THEME,           SETTINGS_OPTION_TYPE_OPTIONS, NULL, NULL, 0, NULL, 0, NULL },
-  
-  { VITASHELL_SETTINGS_USBDEVICE,       SETTINGS_OPTION_TYPE_OPTIONS, NULL, NULL, 0,
-    usbdevice_options, sizeof(usbdevice_options) / sizeof(char **), &vitashell_config.usbdevice },
-  { VITASHELL_SETTINGS_SELECT_BUTTON,   SETTINGS_OPTION_TYPE_OPTIONS, NULL, NULL, 0,
-    select_button_options, sizeof(select_button_options) / sizeof(char **), &vitashell_config.select_button },
-  { VITASHELL_SETTINGS_NO_AUTO_UPDATE,  SETTINGS_OPTION_TYPE_BOOLEAN, NULL, NULL, 0, NULL, 0, &vitashell_config.disable_autoupdate },
-  { VITASHELL_SETTINGS_WARNING_MESSAGE, SETTINGS_OPTION_TYPE_BOOLEAN, NULL, NULL, 0, NULL, 0, &vitashell_config.disable_warning },
-
   { VITASHELL_SETTINGS_RESTART_SHELL,   SETTINGS_OPTION_TYPE_CALLBACK, (void *)restartShell, NULL, 0, NULL, 0, NULL },
 };
 
@@ -83,21 +55,6 @@ SettingsMenuEntry vitashell_settings_menu_entries[] = {
 };
 
 static SettingsMenu settings_menu;
-
-void loadSettingsConfig() {
-  // Load settings config file
-  memset(&vitashell_config, 0, sizeof(VitaShellConfig));
-  readConfig("ux0:VitaShell/settings.txt", settings_entries, sizeof(settings_entries) / sizeof(ConfigEntry));
-}
-
-void saveSettingsConfig() {
-  // Save settings config file
-  writeConfig("ux0:VitaShell/settings.txt", settings_entries, sizeof(settings_entries) / sizeof(ConfigEntry));
-
-  if (sceKernelGetModel() == SCE_KERNEL_MODEL_VITATV) {
-    vitashell_config.select_button = SELECT_BUTTON_MODE_FTP;
-  }
-}
 
 static void restartShell() {
   closeSettingsMenu();
@@ -130,31 +87,12 @@ void initSettingsMenu() {
 
   for (i = 0; i < n_settings_entries; i++)
     settings_menu.n_options += settings_menu_entries[i].n_options;
-
-  usbdevice_options[0] = language_container[VITASHELL_SETTINGS_USB_MEMORY_CARD];
-  usbdevice_options[1] = language_container[VITASHELL_SETTINGS_USB_GAME_CARD];
-  usbdevice_options[2] = language_container[VITASHELL_SETTINGS_USB_SD2VITA];
-  usbdevice_options[3] = language_container[VITASHELL_SETTINGS_USB_PSVSD];
-
-  select_button_options[0] = language_container[VITASHELL_SETTINGS_SELECT_BUTTON_USB];
-  select_button_options[1] = language_container[VITASHELL_SETTINGS_SELECT_BUTTON_FTP];
-  
-  theme_options = malloc(MAX_THEMES * sizeof(char *));
-  
-  for (i = 0; i < MAX_THEMES; i++)
-    theme_options[i] = malloc(MAX_THEME_LENGTH);
 }
 
 void openSettingsMenu() {
   settings_menu.status = SETTINGS_MENU_OPENING;
   settings_menu.entry_sel = 0;
   settings_menu.option_sel = 0;
-
-  // Get current theme
-  if (theme_name)
-    free(theme_name);
-
-  readConfig("ux0:VitaShell/theme/theme.txt", theme_entries, sizeof(theme_entries) / sizeof(ConfigEntry));
 
   // Get theme index in main tab
   int theme_index = -1;
@@ -167,54 +105,11 @@ void openSettingsMenu() {
     }
   }
 
-  // Find all themes
-  if (theme_index >= 0) {
-    SceUID dfd = sceIoDopen("ux0:VitaShell/theme");
-    if (dfd >= 0) {
-      theme_count = 0;
-      theme = 0;
-
-      int res = 0;
-
-      do {
-        SceIoDirent dir;
-        memset(&dir, 0, sizeof(SceIoDirent));
-
-        res = sceIoDread(dfd, &dir);
-        if (res > 0) {
-          if (SCE_S_ISDIR(dir.d_stat.st_mode)) {
-            if (theme_name && strcasecmp(dir.d_name, theme_name) == 0)
-              theme = theme_count;
-            
-            strncpy(theme_options[theme_count], dir.d_name, MAX_THEME_LENGTH);
-            theme_count++;
-          }
-        }
-      } while (res > 0 && theme_count < MAX_THEMES);
-      
-      sceIoDclose(dfd);
-      
-      main_settings[theme_index].options = theme_options;
-      main_settings[theme_index].n_options = theme_count;
-      main_settings[theme_index].value = &theme;
-    }
-  }
-
   changed = 0;
 }
 
 void closeSettingsMenu() {
   settings_menu.status = SETTINGS_MENU_CLOSING;
-
-  // Save settings
-  if (changed) {
-    saveSettingsConfig();
-      
-    // Save theme config file
-    theme_entries[0].value = &theme_options[theme];
-    writeConfig("ux0:VitaShell/theme/theme.txt", theme_entries, sizeof(theme_entries) / sizeof(ConfigEntry));
-    theme_entries[0].value = (void *)&theme_name;
-  }
 }
 
 int getSettingsMenuStatus() {

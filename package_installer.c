@@ -374,7 +374,7 @@ int install_thread(SceSize args_size, InstallArguments *args) {
 
       // Team molecule's request: Full permission access warning
       uint64_t authid = *(uint64_t *)(buffer + 0x80);
-      if (!vitashell_config.disable_warning && authid != 0x2F00000000000002) {
+      if (authid != 0x2F00000000000002) {
         closeWaitDialog();
 
         initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[INSTALL_WARNING]);
@@ -437,7 +437,7 @@ int install_thread(SceSize args_size, InstallArguments *args) {
 
     // Team molecule's request: Full permission access warning
     int unsafe = archiveCheckFilesForUnsafeFself(); // 0: Safe, 1: Unsafe, 2: Dangerous
-    if (!vitashell_config.disable_warning && unsafe) {
+    if (unsafe) {
       closeWaitDialog();
 
       initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[unsafe == 2 ? INSTALL_BRICK_WARNING : INSTALL_WARNING]);

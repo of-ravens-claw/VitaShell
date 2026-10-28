@@ -72,13 +72,9 @@ static char dir_level_archive = -1;
 static int scroll_count = 0;
 static float scroll_x = FILE_X;
 
-SceInt64 time_last_recent_files, time_last_bookmarks;
-
 static void fileBrowserHandleSymlink(FileListEntry* file_entry);
 static void fileBrowserHandleFolder(FileListEntry* file_entry);
 static void fileBrowserHandleFile(FileListEntry* file_entry);
-
-static void create_recent_symlink(FileListEntry *file_entry);
 
 // escape from dir hierarchy with a symlink
 typedef struct SymlinkDirectoryPath {
@@ -184,23 +180,6 @@ static void dirUp() {
     pfsUmount();
   }
 
-  // skip all symlink hierarchies when pressing O in bookmarks/ recent files
-  if (symlink_directory_path_head &&
-      ((strncmp(file_list.path, VITASHELL_BOOKMARKS_PATH, MAX_PATH_LENGTH) == 0)
-       || strncmp(file_list.path, VITASHELL_RECENT_PATH, MAX_PATH_LENGTH) == 0)) {
-    strcpy(file_list.path, symlink_directory_path_head->last_path);
-    SymlinkDirectoryPath *e = symlink_directory_path;
-    while(e != NULL) {
-      SymlinkDirectoryPath *prev = e->previous;
-      free(e);
-      dir_level--;
-      e = prev;
-    }
-    symlink_directory_path_head = 0;
-    symlink_directory_path = 0;
-    goto DIR_UP_RETURN;
-  }
-
   if (symlink_directory_path
       && strncmp(file_list.path, symlink_directory_path->last_hook, MAX_PATH_LENGTH) == 0) {
     strcpy(file_list.path, symlink_directory_path->last_path);
@@ -266,13 +245,7 @@ void setFocusOnFilename(const char *name) {
 int refreshFileList() {
   int ret = 0, res = 0;
 
-  // always sort recent files by date
-  char *contains = strstr(file_list.path, VITASHELL_RECENT_PATH);
-  if (contains) {
-    sort_mode = SORT_BY_DATE;
-  } else {
-    sort_mode = last_set_sort_mode;
-  }
+  sort_mode = last_set_sort_mode;
 
   do {
     fileListEmpty(&file_list);
@@ -433,47 +406,8 @@ static int handleFile(const char *file, FileListEntry *entry) {
   return type;
 }
 
-int shortCuts() {
-  // bookmarks shortcut
-  if (current_pad[PAD_SQUARE]) {
-    SceInt64 now = sceKernelGetSystemTimeWide();
-
-    // switching too quickly back and forth between recent and bookmarks
-    // causes VS to crash
-    if (now - time_last_bookmarks > THRESHOLD_LAST_PAD_BOOKMARKS_WAIT) {
-      if (strncmp(file_list.path, VITASHELL_BOOKMARKS_PATH, MAX_PATH_LENGTH) != 0) {
-        char path[MAX_PATH_LENGTH] = VITASHELL_BOOKMARKS_PATH;
-        sort_mode = last_set_sort_mode;
-        jump_to_directory_track_current_path(path);
-        time_last_bookmarks = now;
-        return 0;
-      }
-    }
-  }
-
-  // recent files shortcut
-  if (current_pad[PAD_TRIANGLE]) {
-    SceInt64 now = sceKernelGetSystemTimeWide();
-    if (now - time_last_recent_files > THRESHOLD_LAST_PAD_RECENT_FILES_WAIT) {
-      if (strncmp(file_list.path, VITASHELL_RECENT_PATH, MAX_PATH_LENGTH) != 0) {
-        char path[MAX_PATH_LENGTH] = VITASHELL_RECENT_PATH;
-        sort_mode = SORT_BY_DATE;
-        jump_to_directory_track_current_path(path);
-        time_last_recent_files = now;
-        return 0;
-      }
-    }
-  }
-
-  return 0;
-}
-
 static int fileBrowserMenuCtrl() {
   int refresh = 0;
-
-  // Short cuts combo
-  if (current_pad[PAD_LEFT])
-    return shortCuts();
 
   // Settings menu
   if (pressed_pad[PAD_START]) {
@@ -590,7 +524,6 @@ static int fileBrowserMenuCtrl() {
       scroll_count = 0;
       fileListEmpty(&mark_list);
       dirUp();
-      WriteFile(VITASHELL_LASTDIR, file_list.path, strlen(file_list.path) + 1);
       refreshFileList();
     }
   }
@@ -610,23 +543,10 @@ static int fileBrowserMenuCtrl() {
         fileBrowserHandleFolder(file_entry);
       } else {
         fileBrowserHandleFile(file_entry);
-        create_recent_symlink(file_entry);
       }
     }
   }
   return refresh;
-}
-
-static void create_recent_symlink(FileListEntry *file_entry) {
-  if (isInArchive()) return;
-
-  char target[MAX_PATH_LENGTH];
-  snprintf(target, MAX_PATH_LENGTH, "%s%s."SYMLINK_EXT, VITASHELL_RECENT_PATH,
-               file_entry->name);
-  snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
-
-  // create file recent symlink
-  createSymLink(target, cur_file);
 }
 
 static void fileBrowserHandleFile(FileListEntry *file_entry) {
@@ -662,9 +582,6 @@ static void fileBrowserHandleFolder(FileListEntry *file_entry) {
     dirLevelUp();
   }
 
-  // Save last dir
-  WriteFile(VITASHELL_LASTDIR, file_list.path, strlen(file_list.path) + 1);
-
   // Open folder
   int res = refreshFileList();
   if (res < 0)
@@ -694,7 +611,6 @@ int jump_to_directory_track_current_path(char *path) {
       free(symlink_path);
       return VITASHELL_ERROR_NAVIGATION;
     }
-    WriteFile(VITASHELL_LASTDIR, file_list.path, strlen(file_list.path) + 1);
     storeSymlinkPath(symlink_path);
     dir_level = _dir_level;
     refreshFileList();
@@ -763,13 +679,6 @@ int browserMain() {
   // Current path is 'home'
   strcpy(file_list.path, HOME_PATH);
 
-  if (use_custom_config) {
-    // Last dir
-    char lastdir[MAX_PATH_LENGTH];
-    ReadFile(VITASHELL_LASTDIR, lastdir, sizeof(lastdir));
-    change_to_directory(lastdir);
-  }
-
   // Refresh file list
   refreshFileList();
 
@@ -802,7 +711,6 @@ int browserMain() {
 
     // Refresh on app resume
     if (event.systemEvent == SCE_APPMGR_SYSTEMEVENT_ON_RESUME) {
-      sceShellUtilLock(SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION);
       pfsUmount(); // umount game data at resume
       refresh = REFRESH_MODE_NORMAL;
     }

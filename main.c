@@ -54,11 +54,7 @@ static SceKernelLwMutexWork dialog_mutex;
 char vita_ip[16];
 unsigned short int vita_port;
 
-VitaShellConfig vitashell_config;
-
 int SCE_CTRL_ENTER = SCE_CTRL_CROSS, SCE_CTRL_CANCEL = SCE_CTRL_CIRCLE;
-
-int use_custom_config = 1;
 
 int getDialogStep() {
   sceKernelLockLwMutex(&dialog_mutex, 1, NULL);
@@ -92,7 +88,7 @@ void drawShellInfo(const char *path) {
   if (version[3] == '0')
     version[3] = '\0';
 
-  pgf_draw_textf(SHELL_MARGIN_X, SHELL_MARGIN_Y, TITLE_COLOR, "VitaShell %s", version);
+  pgf_draw_textf(SHELL_MARGIN_X, SHELL_MARGIN_Y, TITLE_COLOR, "VitaShell %s (stripped)", version);
 
   // Status bar
   float x = SCREEN_WIDTH - SHELL_MARGIN_X;
@@ -842,14 +838,8 @@ int main(int argc, const char *argv[]) {
 
   // Init VitaShell
   initVitaShell();
-
-  // No custom config, in case they are damaged or unuseable
-  readPad();
-  if (current_pad[PAD_LTRIGGER])
-    use_custom_config = 0;
   
   // Load stuff
-  loadSettingsConfig();
   loadTheme();
   loadLanguage(language);
 

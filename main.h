@@ -43,25 +43,15 @@
 #include <ftpvita.h>
 
 #include "file.h"
-#include "vitashell_config.h"
 #include "vitashell_error.h"
 
 #define INCLUDE_EXTERN_RESOURCE(name) extern unsigned char _binary_resources_##name##_start; extern unsigned char _binary_resources_##name##_size; \
 
 // VitaShell version major.minor
 #define VITASHELL_VERSION_MAJOR 0x02
-#define VITASHELL_VERSION_MINOR 0x03
+#define VITASHELL_VERSION_MINOR 0x04
 
-#define VITASHELL_VERSION ((VITASHELL_VERSION_MAJOR << 0x18) | (VITASHELL_VERSION_MINOR << 0x10))
-
-#define VITASHELL_LASTDIR "ux0:VitaShell/internal/lastdir.txt"
-
-// needs / at the end
-#define VITASHELL_BOOKMARKS_PATH "ux0:VitaShell/bookmarks/"
-#define VITASHELL_RECENT_PATH "ux0:VitaShell/recent/"
-#define VITASHELL_RECENT_PATH_DELETE_INTERVAL_DAYS 14
-
-#define VITASHELL_TITLEID "VITASHELL"
+#define VITASHELL_VERSION ((VITASHELL_VERSION_MAJOR << 24) | (VITASHELL_VERSION_MINOR << 16))
 
 #define ALIGN(x, align) (((x) + ((align) - 1)) & ~((align) - 1))
 
@@ -215,11 +205,7 @@ extern char font_size_cache[256];
 extern char vita_ip[16];
 extern unsigned short int vita_port;
 
-extern VitaShellConfig vitashell_config;
-
 extern int SCE_CTRL_ENTER, SCE_CTRL_CANCEL;
-
-extern int use_custom_config;
 
 int getDialogStep();
 void setDialogStep(int step);

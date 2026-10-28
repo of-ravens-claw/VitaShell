@@ -30,7 +30,6 @@ void initContextMenuWidth();
 void setContextMenuHomeVisibilities();
 void setContextMenuMainVisibilities();
 void setContextMenuSortVisibilities();
-void setContextMenuBookmarksVisibilities();
 void setContextMenuMoreVisibilities();
 void setContextMenuNewVisibilities();
 

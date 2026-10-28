@@ -5,6 +5,12 @@
 - Remove network updater.
 - Remove taiHEN modules.
 - Remove Adhoc.
+- Remove USB.
+- Remove Settings.
+- Remove localization.
+- Do not write any files to the Memory Card.
+- Removed bookmarks.
+- Removed recent files.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

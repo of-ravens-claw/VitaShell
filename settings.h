@@ -68,9 +68,6 @@ typedef struct {
   int n_options;
 } SettingsMenuEntry;
 
-void loadSettingsConfig();
-void saveSettingsConfig();
-
 void initSettingsMenu();
 void openSettingsMenu();
 void closeSettingsMenu();

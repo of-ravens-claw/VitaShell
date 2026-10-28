@@ -239,36 +239,6 @@ void loadTheme() {
   readConfigBuffer(&_binary_resources_default_colors_txt_start, (int)&_binary_resources_default_colors_txt_size,
                    colors_entries, sizeof(colors_entries) / sizeof(ConfigEntry));
 
-  // Load custom config file
-  if (use_custom_config) {
-    char path[MAX_PATH_LENGTH];
-
-    char *theme_name = NULL;
-    ConfigEntry theme_entries[] = {
-      { "THEME_NAME", CONFIG_TYPE_STRING, (void *)&theme_name },
-    };
-
-    // Load theme config
-    readConfig("ux0:VitaShell/theme/theme.txt", theme_entries, sizeof(theme_entries) / sizeof(ConfigEntry));
-
-    if (theme_name) {
-      // Load colors config
-      snprintf(path, MAX_PATH_LENGTH, "ux0:VitaShell/theme/%s/colors.txt", theme_name);
-      readConfig(path, colors_entries, sizeof(colors_entries) / sizeof(ConfigEntry));
-      
-      // Font
-      snprintf(path, MAX_PATH_LENGTH, "ux0:VitaShell/theme/%s/font.pgf", theme_name);
-      font = vita2d_load_custom_pgf(path);
-      
-      // Load theme
-      for (i = 0; i < N_THEME_IMAGES; i++) {
-        snprintf(path, MAX_PATH_LENGTH, "ux0:VitaShell/theme/%s/%s", theme_name, theme_images[i].name);
-        if (theme_images[i].texture && *(theme_images[i].texture) == NULL)
-          *(theme_images[i].texture) = vita2d_load_PNG_file(path);
-      }
-    }
-  }
-
   // Load default theme
   for (i = 0; i < N_THEME_IMAGES; i++) {
     if (theme_images[i].texture && *(theme_images[i].texture) == NULL && theme_images[i].default_buf)

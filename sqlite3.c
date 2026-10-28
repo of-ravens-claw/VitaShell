@@ -49,7 +49,7 @@ static sqlite3_vfs *rw_vfs = NULL;
 // The file structure used by Sony
 typedef struct {
   sqlite3_file file;
-  int* fd;
+  SceUID* fd;
 } vfs_file;
 
 static int vita_xWrite(sqlite3_file *file, const void *buf, int count, sqlite_int64 offset)
