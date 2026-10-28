@@ -400,23 +400,6 @@ static int mediaPathHandler(const char *path) {
   return 1;
 }
 
-static void musicExportProgress(void *data, int progress) {
-  uint32_t *args = (uint32_t *)data;
-
-  uint32_t *value = (uint32_t *)args[1];
-  uint32_t old_value = *value;
-  *value = (uint32_t)(((float)progress / 100.0f) * (float)args[0]);
-
-  FileProcessParam *param = (FileProcessParam *)args[2];
-  if (param) {
-    if (param->value)
-      (*param->value) += (*value - old_value);
-
-    if (param->SetProgress)
-      param->SetProgress(param->value ? *param->value : 0, param->max);
-  }
-}
-
 static int exportMedia(char *path, uint32_t *songs, uint32_t *videos, uint32_t *pictures, FileProcessParam *process_param) {
   static char buf[64 * 1024];
   char out[MAX_PATH_LENGTH];

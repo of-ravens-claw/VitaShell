@@ -718,7 +718,7 @@ int browserMain() {
     }
 
     // Start drawing
-    startDrawing(bg_browser_image);
+    startDrawing();
 
     // Draw
     drawShellInfo(file_list.path);

@@ -62,7 +62,7 @@ extern Pad hold_count, hold2_count;
 
 float easeOut(float x0, float x1, float a, float b);
 
-void startDrawing(vita2d_texture *bg);
+void startDrawing();
 void endDrawing();
 
 void closeWaitDialog();

@@ -111,12 +111,8 @@ int AUDIO_TIME_BAR_BG;
 vita2d_texture *folder_icon = NULL, *folder_symlink_icon = NULL, *file_icon = NULL,*file_symlink_icon = NULL, *archive_icon =NULL, *image_icon = NULL,
     *sfo_icon = NULL, *text_icon = NULL,
          *ftp_image = NULL, *dialog_image = NULL, *context_image = NULL, *context_more_image = NULL, *settings_image = NULL, *battery_image = NULL,
-         *battery_bar_red_image = NULL, *battery_bar_green_image = NULL, *battery_bar_charge_image = NULL, *bg_browser_image = NULL, *bg_hex_image = NULL, *bg_text_image = NULL,
-         *bg_photo_image = NULL, *play_image = NULL, *pause_image = NULL, *fastforward_image = NULL, *fastrewind_image = NULL;
-
-vita2d_texture *wallpaper_image;
-
-vita2d_texture *previous_wallpaper_image = NULL, *current_wallpaper_image = NULL;
+         *battery_bar_red_image = NULL, *battery_bar_green_image = NULL, *battery_bar_charge_image = NULL,
+         *play_image = NULL, *pause_image = NULL, *fastforward_image = NULL, *fastrewind_image = NULL;
 
 vita2d_pgf *font = NULL;
 char font_size_cache[256];
@@ -133,29 +129,18 @@ ThemeImage theme_images[] = {
   { "battery_bar_charge.png", &_binary_resources_default_battery_bar_charge_png_start, &battery_bar_charge_image },
   { "battery_bar_green.png", &_binary_resources_default_battery_bar_green_png_start, &battery_bar_green_image },
   { "battery_bar_red.png", &_binary_resources_default_battery_bar_red_png_start, &battery_bar_red_image },
-  { "bg_browser.png", NULL, &bg_browser_image },
-  { "bg_hexeditor.png", NULL, &bg_hex_image },
-  { "bg_photoviewer.png", NULL, &bg_photo_image },
-  { "bg_texteditor.png", NULL, &bg_text_image },
-  { "context.png", NULL, &context_image },
-  { "context_more.png", NULL, &context_more_image },
-  { "dialog.png", NULL, &dialog_image },
   { "fastforward.png", &_binary_resources_default_fastforward_png_start, &fastforward_image },
   { "fastrewind.png", &_binary_resources_default_fastrewind_png_start, &fastrewind_image },
   { "file_icon.png", &_binary_resources_default_file_icon_png_start, &file_icon },
-  { "file_symlink_icon.png", &_binary_resources_default_file_symlink_icon_png_start,
-      &file_symlink_icon },
+  { "file_symlink_icon.png", &_binary_resources_default_file_symlink_icon_png_start, &file_symlink_icon },
   { "folder_icon.png", &_binary_resources_default_folder_icon_png_start, &folder_icon },
-  { "folder_symlink_icon.png", &_binary_resources_default_folder_symlink_icon_png_start,
-      &folder_symlink_icon },
+  { "folder_symlink_icon.png", &_binary_resources_default_folder_symlink_icon_png_start, &folder_symlink_icon },
   { "ftp.png", &_binary_resources_default_ftp_png_start, &ftp_image },
   { "image_icon.png", &_binary_resources_default_image_icon_png_start, &image_icon },
   { "pause.png", &_binary_resources_default_pause_png_start, &pause_image },
   { "play.png", &_binary_resources_default_play_png_start, &play_image },
-  { "settings.png", NULL, &settings_image },
   { "sfo_icon.png", &_binary_resources_default_sfo_icon_png_start, &sfo_icon },
   { "text_icon.png", &_binary_resources_default_text_icon_png_start, &text_icon },
-  { "wallpaper.png", NULL, &wallpaper_image },
 };
 
 #define N_THEME_IMAGES (sizeof(theme_images) / sizeof(ThemeImage))

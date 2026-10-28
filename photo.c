@@ -344,7 +344,7 @@ int photoViewer(const char *file, int type, FileList *list, FileListEntry *entry
     }
 
     // Start drawing
-    startDrawing(bg_photo_image);
+    startDrawing();
 
     // Photo
     vita2d_draw_texture_scale_rotate_hotspot(tex, SCREEN_HALF_WIDTH, SCREEN_HALF_HEIGHT, zoom, zoom, rad, x, y);

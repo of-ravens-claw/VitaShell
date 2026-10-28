@@ -913,7 +913,7 @@ int textViewer(const char *file) {
     }
 
     // Start drawing
-    startDrawing(bg_text_image);
+    startDrawing();
 
     // Draw shell info
     drawShellInfo(file);

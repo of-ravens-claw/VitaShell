@@ -41,16 +41,10 @@ float easeOut(float x0, float x1, float a, float b) {
   return ((dx * a) > b) ? (dx * a) : dx;
 }
 
-void startDrawing(vita2d_texture *bg) {
+void startDrawing() {
   vita2d_start_drawing();
   vita2d_set_clear_color(BACKGROUND_COLOR);
   vita2d_clear_screen();
-
-  if (wallpaper_image) {
-    vita2d_draw_texture(wallpaper_image, 0.0f, 0.0f);
-  } else if (bg) {
-    vita2d_draw_texture(bg, 0.0f, 0.0f);
-  }
 }
 
 void endDrawing() {
