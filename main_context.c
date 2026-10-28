@@ -40,7 +40,6 @@ enum MenuMainEntrys {
   MENU_MAIN_ENTRY_PROPERTIES,
   MENU_MAIN_ENTRY_NEW,
   MENU_MAIN_ENTRY_SORT_BY,
-  MENU_MAIN_ENTRY_MORE,
 };
 
 MenuEntry menu_main_entries[] = {
@@ -54,7 +53,6 @@ MenuEntry menu_main_entries[] = {
   { PROPERTIES,     10, 0, CTX_INVISIBLE },
   { NEW,            12, CTX_FLAG_MORE, CTX_VISIBLE },
   { SORT_BY,        13, CTX_FLAG_MORE, CTX_VISIBLE },
-  { MORE,           14, CTX_FLAG_MORE, CTX_INVISIBLE },
 };
 
 #define N_MENU_MAIN_ENTRIES (sizeof(menu_main_entries) / sizeof(MenuEntry))
@@ -73,22 +71,6 @@ MenuEntry menu_sort_entries[] = {
 
 #define N_MENU_SORT_ENTRIES (sizeof(menu_sort_entries) / sizeof(MenuEntry))
 
-enum MenuMoreEntrys {
-  MENU_MORE_ENTRY_COMPRESS,
-  MENU_MORE_ENTRY_INSTALL_ALL,
-  MENU_MORE_ENTRY_INSTALL_FOLDER,
-  MENU_MORE_ENTRY_CALCULATE_SHA1,
-};
-
-MenuEntry menu_more_entries[] = {
-  { COMPRESS,       14, 0, CTX_INVISIBLE },
-  { INSTALL_ALL,    15, 0, CTX_INVISIBLE },
-  { INSTALL_FOLDER, 16, 0, CTX_INVISIBLE },
-  { CALCULATE_SHA1, 17, 0, CTX_INVISIBLE },
-};
-
-#define N_MENU_MORE_ENTRIES (sizeof(menu_more_entries) / sizeof(MenuEntry))
-
 enum MenuNewEntrys {
   MENU_NEW_FILE,
   MENU_NEW_FOLDER,
@@ -103,7 +85,6 @@ MenuEntry menu_new_entries[] = {
 
 static int contextMenuMainEnterCallback(int sel, void *context);
 static int contextMenuSortEnterCallback(int sel, void *context);
-static int contextMenuMoreEnterCallback(int sel, void *context);
 static int contextMenuNewEnterCallback(int sel, void *context);
 
 ContextMenu context_menu_main = {
@@ -121,15 +102,6 @@ ContextMenu context_menu_sort = {
   .n_entries = N_MENU_SORT_ENTRIES,
   .max_width = 0.0f,
   .callback = contextMenuSortEnterCallback,
-  .sel = -1,
-};
-
-ContextMenu context_menu_more = {
-  .parent = &context_menu_main,
-  .entries = menu_more_entries,
-  .n_entries = N_MENU_MORE_ENTRIES,
-  .max_width = 0.0f,
-  .callback = contextMenuMoreEnterCallback,
   .sel = -1,
 };
 
@@ -166,14 +138,6 @@ void initContextMenuWidth() {
 
   context_menu_sort.max_width += 2.0f * CONTEXT_MENU_MARGIN;
   context_menu_sort.max_width = MAX(context_menu_sort.max_width, CONTEXT_MENU_MIN_WIDTH);
-
-  // More
-  for (i = 0; i < N_MENU_MORE_ENTRIES; i++) {
-    context_menu_more.max_width = MAX(context_menu_more.max_width, pgf_text_width(language_container[menu_more_entries[i].name]));
-  }
-
-  context_menu_more.max_width += 2.0f * CONTEXT_MENU_MARGIN;
-  context_menu_more.max_width = MAX(context_menu_more.max_width, CONTEXT_MENU_MIN_WIDTH);
 
   // New
   for (i = 0; i < N_MENU_NEW_ENTRIES; i++) {
@@ -289,79 +253,6 @@ void setContextMenuSortVisibilities() {
 
   if (i == N_MENU_SORT_ENTRIES)
     context_menu_sort.sel = -1;
-}
-
-void setContextMenuMoreVisibilities() {
-  int i;
-
-  // All visible
-  for (i = 0; i < N_MENU_MORE_ENTRIES; i++) {
-    if (menu_more_entries[i].visibility == CTX_INVISIBLE)
-      menu_more_entries[i].visibility = CTX_VISIBLE;
-  }
-
-  FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-  if (!file_entry)
-    return;
-
-  // Invisble entries when on '..'
-  if (strcmp(file_entry->name, DIR_UP) == 0) {
-    menu_more_entries[MENU_MORE_ENTRY_COMPRESS].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_CALCULATE_SHA1].visibility = CTX_INVISIBLE;
-  }
-
-  // Invisble operations in archives
-  if (isInArchive() || (pfs_mounted_path[0] && strstr(file_list.path, pfs_mounted_path) && read_only)) {
-    menu_more_entries[MENU_MORE_ENTRY_COMPRESS].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-    menu_more_entries[MENU_MORE_ENTRY_CALCULATE_SHA1].visibility = CTX_INVISIBLE;
-  }
-
-  if (file_entry->is_folder) {
-    menu_more_entries[MENU_MORE_ENTRY_CALCULATE_SHA1].visibility = CTX_INVISIBLE;
-
-    char check_path[MAX_PATH_LENGTH];
-
-    do {
-      if (strcasecmp(file_list.path, "ux0:app/") == 0 ||
-          strcasecmp(file_list.path, "ux0:patch/") == 0) {
-        menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-        break;
-      }
-
-      snprintf(check_path, MAX_PATH_LENGTH, "%s%s/eboot.bin", file_list.path, file_entry->name);
-      if (!checkFileExist(check_path)) {
-        menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-        break;
-      }
-
-      snprintf(check_path, MAX_PATH_LENGTH, "%s%s/sce_sys/param.sfo", file_list.path, file_entry->name);
-      if (!checkFileExist(check_path)) {
-        menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-        break;
-      }
-    } while (0);
-  } else {
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_FOLDER].visibility = CTX_INVISIBLE;
-  }
-
-  if(file_entry->type != FILE_TYPE_VPK) {
-    menu_more_entries[MENU_MORE_ENTRY_INSTALL_ALL].visibility = CTX_INVISIBLE;
-  }
-
-  // Go to first entry
-  for (i = 0; i < N_MENU_MORE_ENTRIES; i++) {
-    if (menu_more_entries[i].visibility == CTX_VISIBLE) {
-      context_menu_more.sel = i;
-      break;
-    }
-  }
-
-  if (i == N_MENU_MORE_ENTRIES)
-    context_menu_more.sel = -1;
 }
 
 void setContextMenuNewVisibilities() {
@@ -605,13 +496,6 @@ static int contextMenuMainEnterCallback(int sel, void *context) {
       return CONTEXT_MENU_MORE_OPENING;
     }
 
-    case MENU_MAIN_ENTRY_MORE:
-    {
-      setContextMenu(&context_menu_more);
-      setContextMenuMoreVisibilities();
-      return CONTEXT_MENU_MORE_OPENING;
-    }
-
     case MENU_MAIN_ENTRY_SORT_BY:
     {
       setContextMenu(&context_menu_sort);
@@ -646,104 +530,6 @@ static int contextMenuSortEnterCallback(int sel, void *context) {
   return CONTEXT_MENU_CLOSING;
 }
 
-static int contextMenuMoreEnterCallback(int sel, void *context) {
-  switch (sel) {
-    case MENU_MORE_ENTRY_COMPRESS:
-    {
-      FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-      if (file_entry) {
-        char path[MAX_NAME_LENGTH];
-
-        // On marked entry
-        if (mark_list.length > 1 && fileListFindEntry(&mark_list, file_entry->name)) {
-          int end_slash = removeEndSlash(file_list.path);
-
-          char *p = strrchr(file_list.path, '/');
-          if (!p)
-            p = strrchr(file_list.path, ':');
-
-          if (strlen(p + 1) > 0) {
-            strcpy(path, p + 1);
-          } else {
-            strncpy(path, file_list.path, p - file_list.path);
-            path[p - file_list.path] = '\0';
-          }
-
-          if (end_slash)
-            addEndSlash(file_list.path);
-        } else {
-          char *p = strrchr(file_entry->name, '.');
-          if (!p)
-            p = strrchr(file_entry->name, '/');
-          if (!p)
-            p = file_entry->name + strlen(file_entry->name);
-
-          strncpy(path, file_entry->name, p-file_entry->name);
-          path[p - file_entry->name] = '\0';
-        }
-
-        // Append .zip extension
-        strcat(path, ".zip");
-
-        initImeDialog(language_container[ARCHIVE_NAME], path, MAX_NAME_LENGTH, SCE_IME_TYPE_BASIC_LATIN, 0, 0);
-        setDialogStep(DIALOG_STEP_COMPRESS_NAME);
-      }
-
-      break;
-    }
-
-    case MENU_MORE_ENTRY_INSTALL_ALL:
-    {
-      // Empty install list
-      fileListEmpty(&install_list);
-
-      FileListEntry *file_entry = file_list.head->next; // Ignore '..'
-
-      int i;
-      for (i = 0; i < file_list.length - 1; i++) {
-        char path[MAX_PATH_LENGTH];
-        snprintf(path, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
-
-        int type = getFileType(path);
-        if (type == FILE_TYPE_VPK) {
-          fileListAddEntry(&install_list, fileListCopyEntry(file_entry), SORT_NONE);
-        }
-
-        // Next
-        file_entry = file_entry->next;
-      }
-
-      strcpy(install_list.path, file_list.path);
-
-      initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[INSTALL_ALL_QUESTION]);
-      setDialogStep(DIALOG_STEP_INSTALL_QUESTION);
-
-      break;
-    }
-
-    case MENU_MORE_ENTRY_INSTALL_FOLDER:
-    {
-      FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-      if (file_entry) {
-        snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
-        initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[INSTALL_FOLDER_QUESTION]);
-        setDialogStep(DIALOG_STEP_INSTALL_QUESTION);
-      }
-
-      break;
-    }
-
-    case MENU_MORE_ENTRY_CALCULATE_SHA1:
-    {
-      // Ensure user wants to actually take the hash
-      initMessageDialog(SCE_MSG_DIALOG_BUTTON_TYPE_YESNO, language_container[HASH_FILE_QUESTION]);
-      setDialogStep(DIALOG_STEP_HASH_QUESTION);
-      break;
-    }
-  }
-
-  return CONTEXT_MENU_CLOSING;
-}
 static int contextMenuNewEnterCallback(int sel, void *context) {
   switch (sel) {
     case MENU_NEW_FILE: {

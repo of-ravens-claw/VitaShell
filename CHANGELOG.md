@@ -17,6 +17,9 @@
 - Remove 'home' context menu.
 - Remove mounting uma0, xmc0, imc0.
 - Remove .psarc support.
+- Remove .zip creation.
+- Remove file SHA1 calculation.
+- Remove 'more' context menu.
 
 ### Changelog 2.03
 - Added support for FW 3.74.

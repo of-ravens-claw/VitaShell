@@ -21,7 +21,6 @@
 #include "browser.h"
 #include "init.h"
 #include "io_process.h"
-#include "makezip.h"
 #include "package_installer.h"
 #include "context_menu.h"
 #include "archive.h"
@@ -228,29 +227,6 @@ int dialogSteps() {
           }
 
           refresh = REFRESH_MODE_NORMAL;
-        }
-        
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_COMPRESSED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_NONE ||
-          msg_result == MESSAGE_DIALOG_RESULT_FINISHED) {
-        FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-        if (file_entry) {
-          // Empty mark list if on marked entry
-          if (fileListFindEntry(&mark_list, file_entry->name)) {
-            fileListEmpty(&mark_list);
-          }
-          
-          // Focus
-          setFocusName(compress_name);
-          
-          refresh = REFRESH_MODE_SETFOCUS;
         }
         
         setDialogStep(DIALOG_STEP_NONE);
@@ -497,96 +473,6 @@ int dialogSteps() {
       } else if (ime_result == IME_DIALOG_RESULT_CANCELED) {
         setDialogStep(DIALOG_STEP_NONE);
       }
-      break;
-    }
-
-    case DIALOG_STEP_COMPRESS_NAME:
-    {
-      if (ime_result == IME_DIALOG_RESULT_FINISHED) {
-        char *name = (char *)getImeDialogInputTextUTF8();
-        if (name[0] == '\0') {
-          setDialogStep(DIALOG_STEP_NONE);
-        } else {
-          strcpy(compress_name, name);
-
-          initImeDialog(language_container[COMPRESSION_LEVEL], "6", 1, SCE_IME_TYPE_NUMBER, 0, 0);
-          setDialogStep(DIALOG_STEP_COMPRESS_LEVEL);
-        }
-      } else if (ime_result == IME_DIALOG_RESULT_CANCELED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-
-    case DIALOG_STEP_COMPRESS_LEVEL:
-    {
-      if (ime_result == IME_DIALOG_RESULT_FINISHED) {
-        char *level = (char *)getImeDialogInputTextUTF8();
-        if (level[0] == '\0') {
-          setDialogStep(DIALOG_STEP_NONE);
-        } else {
-          snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, compress_name);
-
-          CompressArguments args;
-          args.file_list = &file_list;
-          args.mark_list = &mark_list;
-          args.index = base_pos + rel_pos;
-          args.level = atoi(level);
-          args.path = cur_file;
-
-          initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[COMPRESSING]);
-          setDialogStep(DIALOG_STEP_COMPRESSING);
-
-          SceUID thid = sceKernelCreateThread("compress_thread", (SceKernelThreadEntry)compress_thread, 0x40, 0x100000, 0, 0, NULL);
-          if (thid >= 0)
-            sceKernelStartThread(thid, sizeof(CompressArguments), &args);
-        }
-      } else if (ime_result == IME_DIALOG_RESULT_CANCELED) {
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-      
-      break;
-    }
-    
-    case DIALOG_STEP_HASH_QUESTION:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_YES) {
-        // Throw up the progress bar, enter hashing state
-        initMessageDialog(MESSAGE_DIALOG_PROGRESS_BAR, language_container[HASHING]);
-        setDialogStep(DIALOG_STEP_HASH_CONFIRMED);
-      } else if (msg_result == MESSAGE_DIALOG_RESULT_NO) {
-        // Quit
-        setDialogStep(DIALOG_STEP_NONE);
-      }
-
-      break;
-    }
-    
-    case DIALOG_STEP_HASH_CONFIRMED:
-    {
-      if (msg_result == MESSAGE_DIALOG_RESULT_RUNNING) {
-        // User has confirmed desire to hash, get requested file entry
-        FileListEntry *file_entry = fileListGetNthEntry(&file_list, base_pos + rel_pos);
-        if (!file_entry) {
-          setDialogStep(DIALOG_STEP_NONE);
-          break;
-        }
-        
-        // Place the full file path in cur_file
-        snprintf(cur_file, MAX_PATH_LENGTH, "%s%s", file_list.path, file_entry->name);
-
-        HashArguments args;
-        args.file_path = cur_file;
-
-        setDialogStep(DIALOG_STEP_HASHING);
-
-        // Create a thread to run out actual sum
-        SceUID thid = sceKernelCreateThread("hash_thread", (SceKernelThreadEntry)hash_thread, 0x40, 0x100000, 0, 0, NULL);
-        if (thid >= 0)
-          sceKernelStartThread(thid, sizeof(HashArguments), &args);
-      }
-
       break;
     }
     

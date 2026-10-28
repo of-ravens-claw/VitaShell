@@ -21,7 +21,6 @@
 #include "browser.h"
 #include "init.h"
 #include "io_process.h"
-#include "makezip.h"
 #include "package_installer.h"
 #include "context_menu.h"
 #include "archive.h"

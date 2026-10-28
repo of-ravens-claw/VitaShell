@@ -48,16 +48,11 @@ typedef struct {
   int copy_mode;
 } CopyArguments;
 
-typedef struct {
-  char *file_path;
-} HashArguments;
-
 int cancelHandler();
 void SetProgress(uint64_t value, uint64_t max);
 SceUID createStartUpdateThread(uint64_t max, int show_kbs);
 
 int delete_thread(SceSize args_size, DeleteArguments *args);
 int copy_thread(SceSize args_size, CopyArguments *args);
-int hash_thread(SceSize args_size, HashArguments *args);
 
 #endif

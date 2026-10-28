@@ -75,7 +75,6 @@ add_executable(VitaShell
   browser.c
   init.c
   io_process.c
-  makezip.c
   package_installer.c
   context_menu.c
   archive.c
