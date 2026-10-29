@@ -5,6 +5,7 @@
 - Added support for FW 3.61 and 3.63.
 - Changed update server URL.
 - Added support for FW 3.30 to 3.52.
+- Updated PSARC code to support more SceFios2 versions.
 
 ### Changelog 2.02
 - Reverted PSM refresh due to crashes.

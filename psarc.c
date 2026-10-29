@@ -37,7 +37,6 @@
 
 #define SCE_FIOS_BUFFER_INITIALIZER  { 0, 0 }
 #define SCE_FIOS_PSARC_DEARCHIVER_CONTEXT_INITIALIZER { sizeof(SceFiosPsarcDearchiverContext), 0, 0, 0, {0, 0, 0} }
-#define SCE_FIOS_PARAMS_INITIALIZER { 0, sizeof(SceFiosParams), 0, 0, 2, 1, 0, 0, 256 * 1024, 2, 0, 0, 0, 0, 0, SCE_FIOS_BUFFER_INITIALIZER, SCE_FIOS_BUFFER_INITIALIZER, SCE_FIOS_BUFFER_INITIALIZER, SCE_FIOS_BUFFER_INITIALIZER, NULL, NULL, NULL, { 66, 189, 66 }, { 0x40000, 0, 0x40000}, { 8 * 1024, 16 * 1024, 8 * 1024}}
 
 typedef int32_t SceFiosFH;
 typedef int32_t SceFiosDH;
@@ -58,7 +57,10 @@ typedef struct SceFiosBuffer {
   size_t length;
 } SceFiosBuffer;
 
-typedef struct SceFiosParams {
+// TODO: What is the firmware range for this structure?
+// 3.10 to 3.36 is guessed.
+// 3.30 uses this.
+typedef struct SceFiosParams_310_336 {
   uint32_t initialized : 1;
   uint32_t paramsSize : 15;
   uint32_t pathMax : 16;
@@ -69,7 +71,35 @@ typedef struct SceFiosParams {
   uint32_t extraFlags : 31;
   uint32_t maxChunk;
   uint8_t maxDecompressorThreadCount;
-  uint8_t reserved1;   
+  uint8_t reserved1;
+  uint8_t reserved2;
+  uint8_t reserved3;
+  intptr_t reserved4;
+  intptr_t reserved5;
+  SceFiosBuffer opStorage;
+  SceFiosBuffer fhStorage;
+  SceFiosBuffer dhStorage;
+  SceFiosBuffer chunkStorage;
+  void *pVprintf;
+  void *pMemcpy;
+  void *pProfileCallback;
+  int threadPriority[2];
+  int threadAffinity[2];
+} SceFiosParams_310_336;
+_Static_assert(sizeof(SceFiosParams_310_336) == 0x60, "wrong size");
+
+typedef struct SceFiosParams_350_374 {
+  uint32_t initialized : 1;
+  uint32_t paramsSize : 15;
+  uint32_t pathMax : 16;
+  uint32_t profiling;
+  uint32_t ioThreadCount;
+  uint32_t threadsPerScheduler;
+  uint32_t extraFlag1 : 1;
+  uint32_t extraFlags : 31;
+  uint32_t maxChunk;
+  uint8_t maxDecompressorThreadCount;
+  uint8_t reserved1;
   uint8_t reserved2;
   uint8_t reserved3;
   intptr_t reserved4;
@@ -84,7 +114,11 @@ typedef struct SceFiosParams {
   int threadPriority[3];
   int threadAffinity[3];
   int threadStackSize[3];
-} SceFiosParams;
+} SceFiosParams_350_374;
+_Static_assert(sizeof(SceFiosParams_350_374) == 0x74, "wrong size");
+
+// opaque type, on purpose.
+typedef struct SceFiosParams SceFiosParams;
 
 typedef struct SceFiosDirEntry {
   SceFiosOffset fileSize;
@@ -146,20 +180,79 @@ SceFiosBuffer g_MountBuffer = SCE_FIOS_BUFFER_INITIALIZER;
 SceFiosFH g_ArchiveFH = -1;
 
 int psarcOpen(const char *file) {
-  int res;
+  int res = 0;
+
+  SceKernelSystemSwVersion fwinfo;
+	sceClibMemset(&fwinfo, 0, sizeof(SceKernelSystemSwVersion));
+	fwinfo.size = sizeof(SceKernelSystemSwVersion);
+	_vshSblGetSystemSwVersion(&fwinfo);
   
-  SceFiosParams params = SCE_FIOS_PARAMS_INITIALIZER;
-  params.opStorage.pPtr = g_OpStorage;
-  params.opStorage.length = sizeof(g_OpStorage);
-  params.chunkStorage.pPtr = g_ChunkStorage;
-  params.chunkStorage.length = sizeof(g_ChunkStorage);
-  params.fhStorage.pPtr = g_FHStorage;
-  params.fhStorage.length = sizeof(g_FHStorage);
-  params.dhStorage.pPtr = g_DHStorage;
-  params.dhStorage.length = sizeof(g_DHStorage);  
-  params.pathMax = MAX_PATH_LENGTH;
+  // This is big enough for all versions.
+  uint8_t fiosParamsBuffer[0x100];
+  memset(fiosParamsBuffer, 0, sizeof(fiosParamsBuffer));
   
-  res = sceFiosInitialize(&params);
+  if (fwinfo.version >= 0x03500000)
+  {
+    // Introduced `threadStackSize` and an extra thread, `SCE_FIOS_CALLBACK_THREAD`.
+    SceFiosParams_350_374* params      = (SceFiosParams_350_374*)fiosParamsBuffer;
+    params->paramsSize                 = sizeof(SceFiosParams_350_374);
+    params->pathMax                    = MAX_PATH_LENGTH;
+    params->ioThreadCount              = 2;
+    params->threadsPerScheduler        = 1;
+    params->maxChunk                   = SCE_KERNEL_256KiB;
+    params->maxDecompressorThreadCount = 2;
+    params->opStorage.pPtr             = g_OpStorage;
+    params->opStorage.length           = sizeof(g_OpStorage);
+    params->chunkStorage.pPtr          = g_ChunkStorage;
+    params->chunkStorage.length        = sizeof(g_ChunkStorage);
+    params->fhStorage.pPtr             = g_FHStorage;
+    params->fhStorage.length           = sizeof(g_FHStorage);
+    params->dhStorage.pPtr             = g_DHStorage;
+    params->dhStorage.length           = sizeof(g_DHStorage);
+    params->threadPriority[0]          = 66;
+    params->threadPriority[1]          = 189;
+    params->threadPriority[2]          = 66;
+    params->threadAffinity[0]          = SCE_KERNEL_CPU_MASK_USER_2;
+    params->threadAffinity[1]          = SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT;
+    params->threadAffinity[2]          = SCE_KERNEL_CPU_MASK_USER_2;
+    params->threadStackSize[0]         = SCE_KERNEL_8KiB;
+    params->threadStackSize[1]         = SCE_KERNEL_16KiB;
+    params->threadStackSize[2]         = SCE_KERNEL_8KiB;
+    // Thread 0: IO Thread
+    // Thread 1: Decompressor Thread
+    // Thread 2: Callback Thread
+  }
+  else if (fwinfo.version >= 0x03100000)
+  {
+    SceFiosParams_310_336* params = (SceFiosParams_310_336*)fiosParamsBuffer;
+    params->paramsSize                 = sizeof(SceFiosParams_310_336);
+    params->pathMax                    = MAX_PATH_LENGTH;
+    params->ioThreadCount              = 2;
+    params->threadsPerScheduler        = 1;
+    params->maxChunk                   = SCE_KERNEL_256KiB;
+    params->maxDecompressorThreadCount = 2;
+    params->opStorage.pPtr             = g_OpStorage;
+    params->opStorage.length           = sizeof(g_OpStorage);
+    params->chunkStorage.pPtr          = g_ChunkStorage;
+    params->chunkStorage.length        = sizeof(g_ChunkStorage);
+    params->fhStorage.pPtr             = g_FHStorage;
+    params->fhStorage.length           = sizeof(g_FHStorage);
+    params->dhStorage.pPtr             = g_DHStorage;
+    params->dhStorage.length           = sizeof(g_DHStorage);
+    params->threadPriority[0]          = 66;
+    params->threadPriority[1]          = 189;
+    params->threadAffinity[0]          = SCE_KERNEL_CPU_MASK_USER_2;
+    params->threadAffinity[1]          = SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT;
+    // Thread 0: IO Thread
+    // Thread 1: Decompressor Thread
+  }
+  else
+  {
+    // unknown fios param size, so just abort.
+    goto ERROR_INITIALIZE;
+  }
+
+  res = sceFiosInitialize((SceFiosParams*)fiosParamsBuffer);
   if (res < 0)
     goto ERROR_INITIALIZE;
   
