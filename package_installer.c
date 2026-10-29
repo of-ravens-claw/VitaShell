@@ -32,12 +32,12 @@ INCLUDE_EXTERN_RESOURCE(head_bin);
 static int loadScePaf() {
   static uint32_t argp[] =
   {
-    SCE_KERNEL_4MiB, // global_heap_size
-    0, // reserved[0]
-    0, // reserved[1]
-    0, // cdlg_mode
-    0, // global_heap_alignment
-    0, // global_heap_disable_assert_on_alloc_failure
+    SCE_KERNEL_4MiB,   // global_heap_size
+    60000,             // reserved[0]
+    SCE_KERNEL_256KiB, // reserved[1]
+    0,                 // cdlg_mode
+    0,                 // global_heap_alignment
+    0,                 // global_heap_disable_assert_on_alloc_failure
   };
 
   int result = -1;

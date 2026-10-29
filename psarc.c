@@ -59,7 +59,7 @@ typedef struct SceFiosBuffer {
 
 // TODO: What is the firmware range for this structure?
 // 3.10 to 3.36 is guessed.
-// 3.30 uses this.
+// 3.18, 3.30 use this.
 typedef struct SceFiosParams_310_336 {
   uint32_t initialized : 1;
   uint32_t paramsSize : 15;
